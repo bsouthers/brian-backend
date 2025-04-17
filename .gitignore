@@ -1,0 +1,12 @@
+# Node
+node_modules/
+dist/
+coverage/
+
+# VS Code / OS
+.vscode/
+.DS_Store
+
+# Secrets
+.env*
+config/config.json

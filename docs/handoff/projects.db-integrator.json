@@ -1,0 +1,28 @@
+{
+  "role": "db-integrator",
+  "module": "projects",
+  "completed": [
+    "Verified src\\models\\Project.js",
+    "Verified src\\models\\index.js"
+  ],
+  "artifacts": [
+    {
+      "type": "code",
+      "name": "Project.js",
+      "path": "src\\models\\Project.js"
+    },
+    {
+      "type": "code",
+      "name": "index.js",
+      "path": "src\\models\\index.js"
+    }
+  ],
+  "missing": [
+    "migrations/*-create-projects.js"
+  ],
+  "assumptions": [],
+  "notes": "",
+  "version": "1.0",
+  "timestamp": "2025-04-16T13:24:00.400Z",
+  "phase": 1
+}

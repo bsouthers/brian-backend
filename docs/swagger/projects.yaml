@@ -1,0 +1,1107 @@
+openapi: 3.0.0
+info:
+  title: Brian API - Projects Module
+  version: 1.0.0
+  description: API endpoints for managing projects, tasks, jobs, and related entities.
+servers:
+  - url: http://localhost:3000 # Replace with actual server URL if different
+    description: Development server
+tags:
+  - name: Projects
+    description: Operations related to projects
+
+paths:
+  /api/v1/projects:
+    get:
+      tags:
+        - Projects
+      summary: List all projects
+      description: Retrieves a list of projects with support for pagination, filtering, sorting, and field selection.
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of projects to return per page.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: offset
+          in: query
+          description: Number of projects to skip for pagination.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            default: 0
+        - name: sort
+          in: query
+          description: Comma-separated list of fields to sort by (e.g., "name:asc,created_at:desc"). Allowed fields include id, name, hours, created_at, start_date, updated_at, closed_at, due_date, status_id, project_open, modified_at.
+          required: false
+          schema:
+            type: string
+            example: "created_at:desc"
+        - name: fields
+          in: query
+          description: Comma-separated list of fields to include in the response (e.g., "id,name,status_id").
+          required: false
+          schema:
+            type: string
+            example: "id,name,start_date,due_date,status_id"
+        # Filtering Parameters (add more as needed based on buildWhereClause)
+        - name: name
+          in: query
+          description: Filter projects by name (case-insensitive, partial match).
+          required: false
+          schema:
+            type: string
+        - name: status_id
+          in: query
+          description: Filter projects by status ID (comma-separated for multiple values).
+          required: false
+          schema:
+            type: string # Can be integer or comma-separated string
+            example: "2,3"
+        - name: project_open
+          in: query
+          description: Filter projects by open status (true/false).
+          required: false
+          schema:
+            type: boolean
+        - name: archived
+          in: query
+          description: Filter projects by archived status (true/false).
+          required: false
+          schema:
+            type: boolean
+        - name: company_id
+          in: query
+          description: Filter projects by company ID.
+          required: false
+          schema:
+            type: integer
+        - name: contract_id
+          in: query
+          description: Filter projects by contract ID.
+          required: false
+          schema:
+            type: integer
+        - name: created_by_user_id
+          in: query
+          description: Filter projects by creator user ID.
+          required: false
+          schema:
+            type: integer
+        - name: created_from
+          in: query
+          description: Filter projects created on or after this date (YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: created_to
+          in: query
+          description: Filter projects created on or before this date (YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+        # Add other date filters: start_from/to, due_from/to, closed_from/to, modified_from/to
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of projects matching the criteria.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of projects matching the filter criteria.
+                        example: 50
+                      limit:
+                        type: integer
+                        description: The limit used for this request.
+                        example: 10
+                      offset:
+                        type: integer
+                        description: The offset used for this request.
+                        example: 0
+                      projects:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project' # Reference to Project schema
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - Projects
+      summary: Create a new project
+      description: Adds a new project to the system.
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Project data to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/projects/{id}:
+    get:
+      tags:
+        - Projects
+      summary: Get a single project by ID
+      description: Retrieves details for a specific project, with an option to include related data like tasks, jobs, and assigned people.
+      parameters:
+        - name: id
+          in: path
+          description: Numeric ID of the project to retrieve.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: include
+          in: query
+          description: Comma-separated list of related data to include (e.g., "tasks,jobs,people,status,creator,modifier").
+          required: false
+          schema:
+            type: string
+            example: "tasks,people"
+        - name: fields
+          in: query
+          description: Comma-separated list of project fields to include in the response.
+          required: false
+          schema:
+            type: string
+            example: "id,name,status_id"
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Project details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Project' # Reference to Project schema, potentially with included data
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Projects
+      summary: Update an existing project
+      description: Modifies the details of a specific project by its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Numeric ID of the project to update.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Project data to update. Only provided fields will be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Updated'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Projects
+      summary: Delete a project
+      description: Removes a project from the system by its ID. May fail if dependencies exist (e.g., active tasks).
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Numeric ID of the project to delete.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          $ref: '#/components/responses/Deleted'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/projects/{id}/tasks:
+    get:
+      tags:
+        - Projects
+      summary: List tasks for a specific project
+      description: Retrieves a list of tasks associated with a given project ID, with pagination support.
+      parameters:
+        - name: id
+          in: path
+          description: Numeric ID of the project whose tasks are to be retrieved.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: Maximum number of tasks to return.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: Number of tasks to skip for pagination.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        # Add filter/sort/fields parameters for tasks if implemented in service
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of tasks for the specified project.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of tasks for this project.
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      tasks:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Task' # Reference to Task schema
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError' # If project ID not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/projects/{id}/jobs:
+    get:
+      tags:
+        - Projects
+      summary: List jobs for a specific project
+      description: Retrieves a list of jobs associated with a given project ID, with pagination support.
+      parameters:
+        - name: id
+          in: path
+          description: Numeric ID of the project whose jobs are to be retrieved.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: Maximum number of jobs to return.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: Number of jobs to skip for pagination.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        # Add filter/sort/fields parameters for jobs if implemented
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of jobs for the specified project.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of jobs for this project.
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      jobs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Job' # Reference to Job schema
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError' # If project ID not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/projects/{id}/people:
+    get:
+      tags:
+        - Projects
+      summary: List people assigned to a specific project
+      description: Retrieves a list of people assigned to a given project ID, with pagination support.
+      parameters:
+        - name: id
+          in: path
+          description: Numeric ID of the project whose assigned people are to be retrieved.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: Maximum number of people to return.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: Number of people to skip for pagination.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        # Add filter/sort/fields parameters for people if implemented
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of people assigned to the specified project.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of people assigned to this project.
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      people:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Person' # Reference to Person schema
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError' # If project ID not found
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          readOnly: true
+        name:
+          type: string
+        hours:
+          type: integer
+          nullable: true
+        contract_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        company_id:
+          type: integer
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true # Usually updated by system
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        archived:
+          type: boolean
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        time_estimate_seconds:
+          type: integer
+          nullable: true
+        project_category_id:
+          type: integer
+          nullable: true
+        contract_value:
+          type: integer # Assuming bigint maps to integer here, adjust if needed
+          format: int64
+          nullable: true
+        material_cost:
+          type: integer
+          format: int64
+          nullable: true
+        customer_name_id:
+          type: integer
+          nullable: true
+        product_category_id:
+          type: integer
+          nullable: true
+        status_id:
+          type: integer
+          default: 2
+        concrete_color_id:
+          type: integer
+          nullable: true
+        address_id:
+          type: integer
+          nullable: true
+        work_category:
+          type: integer
+          nullable: true
+        project_open:
+          type: boolean
+          default: true
+        clickup_task_id:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_by_user_id:
+          type: integer
+          nullable: true
+          readOnly: true
+        modified_by_user_id:
+          type: integer
+          nullable: true
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        name: "New Website Development"
+        hours: 120
+        contract_id: 5
+        created_at: "2025-04-16T14:00:00Z"
+        start_date: "2025-04-20"
+        company_id: 2
+        updated_at: "2025-04-16T15:30:00Z"
+        closed_at: null
+        archived: false
+        due_date: "2025-07-31"
+        time_estimate_seconds: 432000
+        project_category_id: 1
+        contract_value: 50000
+        material_cost: 2000
+        customer_name_id: 10
+        product_category_id: 3
+        status_id: 2
+        concrete_color_id: null
+        address_id: 15
+        work_category: 1
+        project_open: true
+        clickup_task_id: "abc123xyz"
+        notes: "Initial phase involves setting up the development environment."
+        created_by_user_id: 1
+        modified_by_user_id: 1
+        modified_at: "2025-04-16T15:30:00Z"
+
+    # Define Task, Job, Person schemas later
+    Task:
+      type: object
+      description: Represents a task within a project.
+      properties:
+        id:
+          type: integer
+          format: int32
+          readOnly: true
+        hours:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true # Based on model definition
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true # Based on model definition
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        archived:
+          type: boolean
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        time_estimate_seconds:
+          type: integer
+          nullable: true
+        project_id:
+          type: integer
+          description: ID of the project this task belongs to.
+        task_type_id:
+          type: integer
+          nullable: true
+        payment_status_id:
+          type: integer
+          nullable: true
+        status_id:
+          type: integer
+          nullable: true
+        priority_id:
+          type: integer
+          nullable: true
+        task_open:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        assignee:
+          type: integer
+          description: ID of the person assigned to the task (references Person.employee_id).
+          nullable: true
+        clickup_task_id:
+          type: string
+          nullable: true
+        job_id:
+          type: integer
+          description: ID of the job this task belongs to (if any).
+          nullable: true
+        created_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true # Based on model definition
+        modified_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true # Based on model definition
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 101
+        hours: 8
+        created_at: "2025-04-17T10:00:00Z"
+        start_date: "2025-04-18"
+        updated_at: "2025-04-17T11:30:00Z"
+        closed_at: null
+        archived: false
+        due_date: "2025-04-25"
+        time_estimate_seconds: 28800
+        project_id: 1
+        task_type_id: 2
+        payment_status_id: 1
+        status_id: 3
+        priority_id: 2
+        task_open: true
+        notes: "Requires coordination with the design team."
+        assignee: 5
+        clickup_task_id: "def456uvw"
+        job_id: 201
+        created_by_user_id: 1
+        modified_by_user_id: 1
+        modified_at: "2025-04-17T11:30:00Z"
+
+    Job:
+      type: object
+      description: Represents a job, which can be part of a project and contain tasks.
+      properties:
+        id:
+          type: integer
+          format: int32
+          readOnly: true
+        project_id:
+          type: integer
+          description: ID of the project this job belongs to.
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        status_id:
+          type: integer
+          nullable: true
+        product_category_id:
+          type: integer
+          nullable: true
+        square_inches:
+          type: number
+          format: float # DECIMAL maps to number/float or number/double
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true # Based on model definition
+        modified_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true # Based on model definition
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        retail_archived: # Note: Field name from model
+          type: number
+          format: float
+          nullable: true
+        number_of_pieces:
+          type: integer
+          nullable: true
+        break_even:
+          type: number # DECIMAL/NUMERIC maps to number
+          nullable: true
+        contract_value:
+          type: integer
+          format: int64 # BIGINT maps to integer/int64
+          nullable: true
+        material_cost:
+          type: integer
+          format: int64
+          nullable: true
+      example:
+        id: 201
+        project_id: 1
+        name: "API Endpoint Implementation"
+        description: "Develop CRUD endpoints for the users module."
+        created_at: "2025-04-16T16:00:00Z"
+        updated_at: "2025-04-17T09:00:00Z"
+        start_date: "2025-04-18"
+        due_date: "2025-05-15"
+        status_id: 2
+        product_category_id: 3
+        square_inches: null
+        notes: "Focus on performance and security."
+        created_by_user_id: 1
+        modified_by_user_id: 2
+        modified_at: "2025-04-17T09:00:00Z"
+        retail_archived: null
+        number_of_pieces: 5
+        break_even: 1500.50
+        contract_value: 10000
+        material_cost: 500
+
+    Person:
+      type: object
+      description: Represents a user or employee in the system.
+      properties:
+        employee_id:
+          type: integer
+          format: int32
+          readOnly: true
+          description: Unique identifier for the person.
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_id:
+          type: integer
+          nullable: true
+        email:
+          type: string
+          format: email
+        # Password field is intentionally excluded
+        active:
+          type: boolean
+          default: true
+        created_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true # Based on model definition
+        modified_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true # Based on model definition
+        team:
+          type: string
+          maxLength: 50
+          nullable: true
+      required:
+        - employee_id
+        - first_name
+        - last_name
+        - email
+      example:
+        employee_id: 1
+        first_name: "Admin"
+        last_name: "User"
+        company_id: 1
+        email: "admin@example.com"
+        active: true
+        created_by_user_id: null
+        modified_by_user_id: 1
+        team: "Development"
+    ProjectInput:
+      type: object
+      description: Data required to create or update a project.
+      properties:
+        name:
+          type: string
+          description: Name of the project.
+        hours:
+          type: integer
+          nullable: true
+        contract_id:
+          type: integer
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        company_id:
+          type: integer
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        archived:
+          type: boolean
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        time_estimate_seconds:
+          type: integer
+          nullable: true
+        project_category_id:
+          type: integer
+          nullable: true
+        contract_value:
+          type: integer
+          format: int64
+          nullable: true
+        material_cost:
+          type: integer
+          format: int64
+          nullable: true
+        customer_name_id:
+          type: integer
+          nullable: true
+        product_category_id:
+          type: integer
+          nullable: true
+        status_id:
+          type: integer
+          nullable: true
+          default: 2
+        concrete_color_id:
+          type: integer
+          nullable: true
+        address_id:
+          type: integer
+          nullable: true
+        work_category:
+          type: integer
+          nullable: true
+        project_open:
+          type: boolean
+          nullable: true
+          default: true
+        clickup_task_id:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+      required:
+        - name
+      example:
+        name: "New Marketing Campaign"
+        start_date: "2025-06-01"
+        due_date: "2025-09-30"
+        status_id: 2
+        company_id: 3
+        notes: "Focus on social media outreach."
+    SuccessDataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object # Generic data object, specific endpoints will reference concrete schemas like Project
+      required:
+        - success
+        - data
+    SuccessMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+      required:
+        - success
+        - message
+      example:
+        success: true
+        message: "Operation successful."
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: A message describing the error.
+      required:
+        - success
+        - error
+
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            noToken:
+              summary: No token provided
+              value:
+                success: false
+                error: "Access denied. No token provided."
+            invalidToken:
+              summary: Invalid/Expired token
+              value:
+                success: false
+                error: "Invalid token." # or "Token expired."
+    NotFoundError:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Resource not found." # Specific message like "Project with ID 123 not found."
+    InternalServerError:
+      description: An unexpected error occurred on the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "An unexpected error occurred"
+    Created:
+      description: Resource created successfully.
+      content:
+        application/json:
+          schema:
+            allOf: # Combine SuccessDataResponse with specific data schema
+              - $ref: '#/components/schemas/SuccessDataResponse'
+              - type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project' # Specific data type for this response
+          example:
+            success: true
+            data:
+              id: 123 # Example ID of the newly created project
+              name: "New Marketing Campaign"
+              start_date: "2025-06-01"
+              due_date: "2025-09-30"
+              status_id: 2
+              company_id: 3
+              notes: "Focus on social media outreach."
+              created_at: "2025-04-16T18:00:00Z"
+              updated_at: "2025-04-16T18:00:00Z"
+              # ... other fields ...
+    Updated:
+      description: Resource updated successfully.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessDataResponse'
+              - type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+          example:
+            success: true
+            data:
+              id: 123
+              name: "Updated Marketing Campaign"
+              # ... other updated fields ...
+    Deleted:
+      description: Resource deleted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessMessageResponse'
+          example:
+            success: true
+            message: "Project deleted successfully."
+    BadRequest:
+      description: The request was invalid (e.g., validation errors).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Validation failed: 'name' is required." # Example validation error
+    Forbidden:
+      description: The client does not have permission to perform this action.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Forbidden: You do not have permission to delete this project."
+    Conflict:
+      description: The request could not be completed due to a conflict (e.g., deleting a project with active tasks).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Conflict: Cannot delete project with active tasks."
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter JWT token in the format 'Bearer <token>'
+
+security:
+  - BearerAuth: [] # Apply JWT authentication globally by default

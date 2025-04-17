@@ -1,0 +1,128 @@
+{
+  "system-architect": {
+    "default": [
+      "src/index.js",
+      "src/config/database.js",
+      "src/config/environment.js",
+      "src/middleware/error-handler.js",
+      "src/middleware/auth.js",
+      "package.json"
+    ]
+  },
+  "db-integrator": {
+    "default": [
+      "src/models/{Module}.js",
+      "src/models/index.js",
+      "migrations/*-create-{module}.js"
+    ],
+    "projects": [
+      "src/models/Project.js",
+      "src/models/index.js",
+      "migrations/*-create-projects.js"
+    ],
+    "tasks": [
+      "src/models/Task.js",
+      "src/models/index.js",
+      "migrations/*-create-tasks.js"
+    ],
+    "people": [
+      "src/models/Person.js",
+      "src/models/index.js",
+      "migrations/*-create-people.js"
+    ],
+    "jobs": [
+      "src/models/Job.js",
+      "src/models/index.js",
+      "migrations/*-create-jobs.js"
+    ],
+    "time-logs": [
+      "src/models/TimeLog.js",
+      "src/models/index.js",
+      "migrations/*-create-time-logs.js"
+    ]
+  },
+  "api-engineer": {
+    "default": [
+      "src/api/v1/{module}/routes.js",
+      "src/api/v1/{module}/controller.js",
+      "src/api/v1/{module}/service.js",
+      "tests/integration/{module}.test.js",
+      "docs/swagger/{module}.yaml"
+    ],
+    "projects-read": [
+      "src/api/v1/projects/routes.js",
+      "src/api/v1/projects/controller.js",
+      "src/api/v1/projects/service.js",
+      "tests/integration/projects.read.test.js",
+      "docs/swagger/projects.yaml"
+    ],
+    "projects-write": [
+      "src/api/v1/projects/routes.js",
+      "src/api/v1/projects/controller.js",
+      "src/api/v1/projects/service.js",
+      "tests/integration/projects.write.test.js",
+      "docs/swagger/projects.yaml"
+    ],
+    "tasks-read": [
+      "src/api/v1/tasks/routes.js",
+      "src/api/v1/tasks/controller.js",
+      "src/api/v1/tasks/service.js",
+      "tests/integration/tasks.read.test.js",
+      "docs/swagger/tasks.yaml"
+    ],
+    "tasks-write": [
+      "src/api/v1/tasks/routes.js",
+      "src/api/v1/tasks/controller.js",
+      "src/api/v1/tasks/service.js",
+      "tests/integration/tasks.write.test.js",
+      "docs/swagger/tasks.yaml"
+    ],
+    "time-allocation": [
+      "src/api/v1/tasks/time-allocation/routes.js",
+      "src/api/v1/tasks/time-allocation/controller.js",
+      "src/api/v1/tasks/time-allocation/service.js",
+      "tests/integration/tasks.time-allocation.test.js",
+      "docs/swagger/tasks.time-allocation.yaml"
+    ]
+  },
+  "frontend-engineer": {
+    "default": [
+      "frontend/src/pages/{module}/index.jsx",
+      "frontend/src/components/{Module}/{Module}List.jsx",
+      "frontend/src/components/{Module}/{Module}Form.jsx",
+      "frontend/src/services/{module}.service.js"
+    ],
+    "projects": [
+      "frontend/src/pages/projects/index.jsx",
+      "frontend/src/components/Projects/ProjectsList.jsx",
+      "frontend/src/services/projects.service.js"
+    ],
+    "projects-create": [
+      "frontend/src/pages/projects/create.jsx",
+      "frontend/src/components/Projects/ProjectForm.jsx"
+    ]
+  },
+  "qa-engineer": {
+    "default": [
+      "tests/integration/{module}.test.js",
+      "tests/e2e/{module}.spec.js",
+      "load-tests/{module}.js"
+    ],
+    "projects": [
+      "tests/integration/projects.test.js",
+      "tests/e2e/projects.spec.js",
+      "load-tests/projects.js"
+    ],
+    "db-features": [
+      "tests/db/stored-procedures.test.js",
+      "tests/db/task-time-allocation.test.js"
+    ]
+  },
+  "devops-assistant": {
+    "default": [
+      ".github/workflows/deploy.yml",
+      "infrastructure/{module}/setup.js",
+      "monitoring/{module}.js"
+    ]
+  }
+}

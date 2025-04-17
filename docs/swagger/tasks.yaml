@@ -1,0 +1,817 @@
+openapi: 3.0.0
+info:
+  title: Brian API - Tasks Module
+  version: 1.0.0
+  description: API endpoints for managing tasks.
+servers:
+  - url: http://localhost:3000 # Replace with actual server URL if different
+    description: Development server
+tags:
+  - name: Tasks
+    description: Operations related to tasks
+
+paths:
+  /api/v1/tasks:
+    get:
+      tags:
+        - Tasks
+      summary: List all tasks
+      description: Retrieves a list of tasks with support for pagination, filtering, sorting, and field selection.
+      parameters:
+        # Pagination
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        # Sorting
+        - name: sort
+          in: query
+          description: Comma-separated list of fields to sort by (e.g., "due_date:asc,created_at:desc"). Allowed fields include id, hours, created_at, start_date, updated_at, closed_at, due_date, status_id, project_id, task_open, modified_at, assignee.
+          required: false
+          schema:
+            type: string
+            example: "due_date:asc"
+        # Field Selection
+        - name: fields
+          in: query
+          description: Comma-separated list of fields to include in the response (e.g., "id,project_id,status_id,due_date,assignee").
+          required: false
+          schema:
+            type: string
+            example: "id,project_id,status_id,due_date"
+        # Filtering
+        - name: project_id
+          in: query
+          description: Filter tasks by project ID (comma-separated for multiple values).
+          required: false
+          schema:
+            type: string # Can be integer or comma-separated string
+            example: "1,5"
+        - name: status_id
+          in: query
+          description: Filter tasks by status ID (comma-separated for multiple values).
+          required: false
+          schema:
+            type: string
+            example: "2,3"
+        - name: assigned_user_id # Assuming 'assignee' field stores user ID
+          in: query
+          description: Filter tasks by assigned user ID (comma-separated for multiple values).
+          required: false
+          schema:
+            type: string
+            example: "5,10"
+        - name: task_open
+          in: query
+          description: Filter tasks by open status (true/false).
+          required: false
+          schema:
+            type: boolean
+        - name: archived
+          in: query
+          description: Filter tasks by archived status (true/false).
+          required: false
+          schema:
+            type: boolean
+        - name: created_by_user_id
+          in: query
+          description: Filter tasks by creator user ID.
+          required: false
+          schema:
+            type: integer
+        - name: created_from
+          in: query
+          description: Filter tasks created on or after this date (YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: created_to
+          in: query
+          description: Filter tasks created on or before this date (YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: due_from
+          in: query
+          description: Filter tasks due on or after this date (YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: due_to
+          in: query
+          description: Filter tasks due on or before this date (YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+        # Add other relevant filters based on Task model: task_type_id, payment_status_id, priority_id, job_id
+        - name: task_type_id
+          in: query
+          description: Filter tasks by task type ID.
+          required: false
+          schema:
+            type: integer
+        - name: payment_status_id
+          in: query
+          description: Filter tasks by payment status ID.
+          required: false
+          schema:
+            type: integer
+        - name: priority_id
+          in: query
+          description: Filter tasks by priority ID.
+          required: false
+          schema:
+            type: integer
+        - name: job_id
+          in: query
+          description: Filter tasks by job ID.
+          required: false
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of tasks matching the criteria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      description: Adds a new task to the system, usually associated with a project.
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Task data to create. `project_id` is typically required.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskInput'
+      responses:
+        '201':
+          description: Task created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      summary: Get a single task by ID
+      description: Retrieves details for a specific task, with an option to include related data like project, status, assignee, etc.
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+        - name: include
+          in: query
+          description: Comma-separated list of related data to include (e.g., "project,status,assigneeInfo,creator,modifier"). Adjust based on actual include logic.
+          required: false
+          schema:
+            type: string
+            example: "project,assigneeInfo"
+        - name: fields
+          in: query
+          description: Comma-separated list of task fields to include in the response.
+          required: false
+          schema:
+            type: string
+            example: "id,project_id,status_id,due_date,assignee"
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Task details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse' # Task schema, potentially with included data
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - Tasks
+      summary: Update an existing task
+      description: Modifies the details of a specific task by its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        description: Task data to update. Only provided fields will be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Task updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Tasks
+      summary: Delete a task
+      description: Removes a task from the system by its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200': # Or 204 No Content if preferred
+          description: Task deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessageResponse'
+              example:
+                success: true
+                message: "Task deleted successfully."
+        # '204':
+        #   description: Task deleted successfully (No Content).
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/tasks/{id}/assign:
+    post:
+      tags:
+        - Tasks
+      summary: Assign a user to a task
+      description: Assigns a specific user (by their ID) to the task. Replaces any existing assignment.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        description: User ID to assign to the task.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserInput'
+      responses:
+        '200':
+          description: User assigned successfully. Returns the updated task.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest' # e.g., Invalid user ID format
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Task or User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                taskNotFound:
+                  summary: Task not found
+                  value:
+                    success: false
+                    error: "Task with ID 123 not found."
+                userNotFound:
+                  summary: User not found
+                  value:
+                    success: false
+                    error: "User with ID 5 not found."
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/tasks/{id}/assign/{userId}:
+    delete:
+      tags:
+        - Tasks
+      summary: Unassign a user from a task
+      description: Removes the assignment of a specific user from the task. The task's assignee field will likely become null.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+        - name: userId
+          in: path
+          description: Numeric ID of the user to unassign from the task.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: User unassigned successfully. Returns the updated task (with assignee likely null).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Task or User assignment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                taskNotFound:
+                  summary: Task not found
+                  value:
+                    success: false
+                    error: "Task with ID 123 not found."
+                assignmentNotFound:
+                  summary: User not assigned to this task
+                  value:
+                    success: false
+                    error: "User with ID 5 is not assigned to task 123." # Or simply Task not found if the check isn't that specific
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    # --- Reused/Adapted Schemas ---
+    Task:
+      # Copied from projects.yaml, ensure properties match Task model exactly
+      type: object
+      description: Represents a task within a project.
+      properties:
+        id:
+          type: integer
+          format: int32
+          readOnly: true
+        hours:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        archived:
+          type: boolean
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        time_estimate_seconds:
+          type: integer
+          nullable: true
+        project_id:
+          type: integer
+          description: ID of the project this task belongs to.
+        task_type_id:
+          type: integer
+          nullable: true
+        payment_status_id:
+          type: integer
+          nullable: true
+        status_id:
+          type: integer
+          nullable: true
+        priority_id:
+          type: integer
+          nullable: true
+        task_open:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        assignee:
+          type: integer
+          description: ID of the person assigned to the task (references Person.employee_id).
+          nullable: true
+        clickup_task_id:
+          type: string
+          nullable: true
+        job_id:
+          type: integer
+          description: ID of the job this task belongs to (if any).
+          nullable: true
+        created_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true
+        modified_by_user_id:
+          type: integer
+          readOnly: true
+          nullable: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 101
+        hours: 8
+        created_at: "2025-04-17T10:00:00Z"
+        start_date: "2025-04-18"
+        updated_at: "2025-04-17T11:30:00Z"
+        closed_at: null
+        archived: false
+        due_date: "2025-04-25"
+        time_estimate_seconds: 28800
+        project_id: 1
+        task_type_id: 2
+        payment_status_id: 1
+        status_id: 3
+        priority_id: 2
+        task_open: true
+        notes: "Requires coordination with the design team."
+        assignee: 5
+        clickup_task_id: "def456uvw"
+        job_id: 201
+        created_by_user_id: 1
+        modified_by_user_id: 1
+        modified_at: "2025-04-17T11:30:00Z"
+
+    # --- New Schemas for Tasks ---
+    TaskInput:
+      type: object
+      description: Data required to create a new task.
+      properties:
+        # Include all writable fields from Task model, excluding readOnly ones like id, created_at, etc.
+        project_id:
+          type: integer
+          description: ID of the project this task belongs to.
+        job_id:
+          type: integer
+          description: ID of the job this task belongs to (optional).
+          nullable: true
+        hours:
+          type: integer
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        closed_at: # Allow setting closed_at on creation? Maybe not typical.
+          type: string
+          format: date-time
+          nullable: true
+        archived:
+          type: boolean
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        time_estimate_seconds:
+          type: integer
+          nullable: true
+        task_type_id:
+          type: integer
+          nullable: true
+        payment_status_id:
+          type: integer
+          nullable: true
+        status_id:
+          type: integer
+          nullable: true
+        priority_id:
+          type: integer
+          nullable: true
+        task_open:
+          type: boolean
+          default: true
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        assignee:
+          type: integer
+          description: ID of the person to assign to the task (references Person.employee_id).
+          nullable: true
+        clickup_task_id:
+          type: string
+          nullable: true
+      required:
+        - project_id # Typically a task must belong to a project
+        # Add other fields that are logically required for creation if any
+      example:
+        project_id: 1
+        due_date: "2025-05-10"
+        status_id: 2
+        priority_id: 1
+        assignee: 5
+        notes: "Initial setup task for the new module."
+
+    TaskUpdate:
+      type: object
+      description: Data allowed for updating an existing task. Only provided fields are updated.
+      properties:
+        # Include all writable fields from Task model, excluding readOnly ones.
+        # Make all fields optional for partial updates.
+        project_id:
+          type: integer
+          description: ID of the project this task belongs to.
+          nullable: true # Allow changing project? Maybe not. Check requirements. Assume yes for now.
+        job_id:
+          type: integer
+          description: ID of the job this task belongs to (optional).
+          nullable: true
+        hours:
+          type: integer
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        archived:
+          type: boolean
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        time_estimate_seconds:
+          type: integer
+          nullable: true
+        task_type_id:
+          type: integer
+          nullable: true
+        payment_status_id:
+          type: integer
+          nullable: true
+        status_id:
+          type: integer
+          nullable: true
+        priority_id:
+          type: integer
+          nullable: true
+        task_open:
+          type: boolean
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        assignee:
+          type: integer
+          description: ID of the person to assign to the task (references Person.employee_id). Use null to unassign via PUT.
+          nullable: true
+        clickup_task_id:
+          type: string
+          nullable: true
+      example:
+        status_id: 3 # Update status
+        due_date: "2025-05-15" # Update due date
+        notes: "Updated requirements received."
+
+    AssignUserInput:
+      type: object
+      description: Data required to assign a user to a task.
+      properties:
+        userId:
+          type: integer
+          format: int32
+          description: The employee_id of the user to assign.
+      required:
+        - userId
+      example:
+        userId: 5
+
+    # --- Standard Response Wrappers (Copied/Adapted) ---
+    SuccessDataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object # Generic data object, specific endpoints will reference concrete schemas
+      required:
+        - success
+        - data
+
+    SuccessMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+      required:
+        - success
+        - message
+      example:
+        success: true
+        message: "Operation successful."
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: A message describing the error.
+      required:
+        - success
+        - error
+
+    # --- Specific Task Response Schemas ---
+    TaskResponse:
+      description: Standard success response containing a single task object.
+      allOf:
+        - $ref: '#/components/schemas/SuccessDataResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Task'
+
+    TaskListResponse:
+      description: Standard success response containing a list of tasks and pagination info.
+      allOf:
+        - $ref: '#/components/schemas/SuccessDataResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                total:
+                  type: integer
+                  description: Total number of tasks matching the filter criteria.
+                  example: 50
+                limit:
+                  type: integer
+                  description: The limit used for this request.
+                  example: 10
+                offset:
+                  type: integer
+                  description: The offset used for this request.
+                  example: 0
+                tasks:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Task'
+
+  parameters:
+    # Reusable parameters
+    IdParam:
+      name: id
+      in: path
+      description: Numeric ID of the resource (Task in this context).
+      required: true
+      schema:
+        type: integer
+        format: int32
+    LimitParam:
+      name: limit
+      in: query
+      description: Maximum number of items to return per page.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100 # Adjust max limit if needed
+        default: 10
+    OffsetParam:
+      name: offset
+      in: query
+      description: Number of items to skip for pagination.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+
+  responses:
+    # Standard Error Responses (Copied/Adapted)
+    UnauthorizedError:
+      description: Authentication information is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            noToken:
+              summary: No token provided
+              value:
+                success: false
+                error: "Access denied. No token provided."
+            invalidToken:
+              summary: Invalid/Expired token
+              value:
+                success: false
+                error: "Invalid token."
+    NotFoundError:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Resource not found." # Specific message like "Task with ID 123 not found."
+    InternalServerError:
+      description: An unexpected error occurred on the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "An unexpected error occurred"
+    BadRequest:
+      description: The request was invalid (e.g., validation errors).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Validation failed: 'project_id' is required." # Example validation error
+    Forbidden:
+      description: The client does not have permission to perform this action.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Forbidden: You do not have permission to modify this task."
+    Conflict: # May not be directly applicable to tasks unless specific conflicts exist
+      description: The request could not be completed due to a conflict.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: "Conflict: Cannot perform operation due to conflicting state."
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter JWT token in the format 'Bearer <token>'
+
+security:
+  - BearerAuth: [] # Apply JWT authentication globally by default
