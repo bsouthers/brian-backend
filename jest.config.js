@@ -39,5 +39,15 @@ module.exports = {
     '!src/config/*.js',
     '!**/node_modules/**'
   ],
-  coverageReporters: ['text', 'lcov']
+  coverageReporters: ['text', 'lcov'],
+
+  // Enforce coverage minimums
+  coverageThreshold: {
+    global: {
+      branches: 54,
+      functions: 78,
+      lines: 75,
+      statements: 75
+    }
+  },
 };
