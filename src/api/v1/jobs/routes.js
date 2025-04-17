@@ -1,66 +1,68 @@
-// C:\Apps\Brian\src\api\v1\jobs\routes.js
 const express = require('express');
-const jobController = require('./controller');
-const authenticate = require('../../../middleware/auth'); // Import the middleware function directly
+const { param, body, validationResult } = require('express-validator');
+const ctrl = require('./controller');
+const auth = require('../../../middleware/auth');
+const { handleError } = require('../../../utils/responseHandlers');
 
-const router = express.Router();
+const r = express.Router();
 
-// Define job routes
+// validate helper
+const validate = (req,res,next)=>{
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // Map the validation errors to match what the tests expect
+    // The tests expect 'param' but express-validator uses 'path'
+    const mappedErrors = errors.array().map(err => ({
+      ...err,
+      param: err.path // Add param property that points to the path
+    }));
+    
+    // Return the mapped validation errors
+    return res.status(400).json({
+      success: false,
+      error: {
+        message: 'Validation failed',
+        errors: mappedErrors
+      }
+    });
+  }
+  next();
+};
 
-/**
- * @openapi
- * /jobs:
- *   get:
- *     tags:
- *       - Jobs
- *     summary: Retrieve a list of jobs
- *     description: Returns a list of jobs, with optional filtering and inclusion of related data (e.g., project).
- *     parameters:
- *       - in: query
- *         name: include
- *         schema:
- *           type: string
- *         description: Comma-separated list of associations to include (e.g., project)
- *       - in: query
- *         name: fields
- *         schema:
- *           type: string
- *         description: Comma-separated list of fields to return for the Job model
- *       # Add other potential filter parameters here (e.g., status, projectId)
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *         description: Filter by job status
- *       - in: query
- *         name: projectId
- *         schema:
- *           type: integer
- *         description: Filter by associated project ID
- *     responses:
- *       200:
- *         description: A list of jobs.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Job' # Assuming Job schema defined
- *       400:
- *         description: Invalid query parameters
- *       401:
- *         description: Unauthorized
- *     security:
- *       - bearerAuth: []
- */
-// GET /api/v1/jobs - List all jobs (protected)
-router.get('/', authenticate, jobController.listJobs);
+// shared rules
+const idParam = [ param('id').isInt({gt:0}).withMessage('Job ID must be a positive integer') ];
+const statusRule = body('status')
+      .optional()
+      .isIn(['pending','in-progress','completed','archived'])
+      .withMessage('Invalid status value');
 
-// Add other job routes (POST, GET /:id, PUT /:id, DELETE /:id) here if needed in the future
+r.use(auth);   // all job endpoints are protected
 
-module.exports = router;
+/* LIST (already passes) */
+r.get('/', ctrl.listJobs);
+
+/* CREATE */
+r.post('/',
+  body('title').notEmpty().withMessage('Title is required'),
+  body('projectId').isInt({gt:0}).withMessage('Project ID is required and must be an integer'),
+  statusRule,
+  validate,
+  ctrl.createJob
+);
+
+/* READ single  */
+r.get('/:id', idParam, validate, ctrl.getJobById);
+
+/* UPDATE */
+r.put('/:id',
+  idParam,
+  body('title').optional().notEmpty(),
+  statusRule,
+  validate,
+  ctrl.updateJob
+);
+
+/* DELETE */
+r.delete('/:id', idParam, validate, ctrl.deleteJob);
+
+module.exports = r;

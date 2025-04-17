@@ -11,16 +11,10 @@ const router = express.Router();
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Use the message from the first validation error for the response
-    const firstError = errors.array()[0];
-    const errorMessage = firstError.msg; // Use only the message from the validator
-
-    // Create an error object compatible with handleError
-    const validationError = new Error(errorMessage); // Use the validator's message
+    const validationError = new Error('Validation failed');
     validationError.statusCode = 400;
-    // Add context for debugging if needed, but don't include in the main error message sent to client unless necessary
-    // validationError.details = { field: firstError.param, value: firstError.value };
-    return handleError(res, validationError); // Use handleError
+    validationError.errors = errors.array();
+    return handleError(res, validationError);
   }
   next();
 };

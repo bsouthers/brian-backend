@@ -11,10 +11,9 @@ const router = express.Router();
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const firstError = errors.array()[0];
-    const errorMessage = firstError.msg;
-    const validationError = new Error(errorMessage);
+    const validationError = new Error('Validation failed');
     validationError.statusCode = 400;
+    validationError.errors = errors.array();
     // Instead of handling the error here, pass it to the next middleware
     // which will eventually trigger the global error handler
     return next(validationError);

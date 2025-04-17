@@ -65,9 +65,27 @@ const handleError = (res, error, statusCodeParam) => {
   }
 
   // console.log(`[handleError] Sending response with statusCode: ${statusCode}, message: ${message}`); // Removed log
+  const errorPayload = { message };
+  if (Array.isArray(error.errors)) {
+    // Make sure we're keeping the full error objects with all properties
+    errorPayload.errors = error.errors.map(err => {
+      // If err is already a plain object, return it as is
+      if (err === null || typeof err !== 'object' || Array.isArray(err)) {
+        return err;
+      }
+      
+      // Otherwise, create a plain object copy to ensure all properties are preserved
+      const plainErr = {};
+      Object.getOwnPropertyNames(err).forEach(key => {
+        plainErr[key] = err[key];
+      });
+      return plainErr;
+    });
+  }
+
   res.status(statusCode).json({
     success: false,
-    error: message,
+    error: errorPayload,
     // Optionally include error code or type in development/staging
     ...(process.env.NODE_ENV !== 'production' && error.name ? { errorType: error.name } : {}),
   });
