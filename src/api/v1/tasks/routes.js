@@ -12,11 +12,14 @@ const handleValidationErrors = (req, res, next) => {
   const result = validationResult(req);
   if (result.isEmpty()) return next();
 
-  const details = result.array().map(e => ({ ...e, param: e.param ?? e.path }));
+  // Extract the message from the first validation error
+  const errorsArray = result.array();
+  const firstErrorMsg = errorsArray.length > 0 ? errorsArray[0].msg : 'Validation failed'; // Default fallback
+
   return res.status(400).json({
     success: false,
-    error: 'Validation failed',
-    validationDetails: details,
+    // Use the specific message from the first error
+    error: firstErrorMsg
   });
 };
 

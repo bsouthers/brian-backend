@@ -302,8 +302,8 @@ describe('Tasks API - Read Operations (Integration)', () => {
         .set('Authorization', `Bearer ${testToken}`);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      // Check the specific error message within the errors array
-      expect(res.body.errors[0].msg).toMatch(/Invalid task ID/i);
+      // Check the specific error message in the top-level error field
+      expect(res.body.error).toMatch(/Invalid task ID/i);
     });
 
     it('should return 404 Not Found for a non-existent task ID', async () => {

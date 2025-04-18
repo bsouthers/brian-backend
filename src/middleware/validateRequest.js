@@ -11,12 +11,13 @@ module.exports = function validateRequest(req, res, next) {
       param: err.path // Add param property that points to the path
     }));
     
+    // Extract the message from the first validation error
+    const firstErrorMsg = mappedErrors.length > 0 ? mappedErrors[0].msg : 'Validation failed';
+
     return res.status(400).json({
       success: false,
-      error: {
-        message: 'Validation failed',
-        errors: mappedErrors,
-      },
+      // Use the specific message from the first error
+      error: firstErrorMsg
     });
   }
   return next();
