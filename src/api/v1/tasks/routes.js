@@ -9,16 +9,15 @@ const router = express.Router();
 
 // Middleware to handle validation errors (similar to projects)
 const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const validationError = new Error('Validation failed');
-    validationError.statusCode = 400;
-    validationError.errors = errors.array();
-    // Instead of handling the error here, pass it to the next middleware
-    // which will eventually trigger the global error handler
-    return next(validationError);
-  }
-  next();
+  const result = validationResult(req);
+  if (result.isEmpty()) return next();
+
+  const details = result.array().map(e => ({ ...e, param: e.param ?? e.path }));
+  return res.status(400).json({
+    success: false,
+    error: 'Validation failed',
+    validationDetails: details,
+  });
 };
 
 // --- Validation Rules ---
@@ -65,7 +64,15 @@ const listTasksValidation = [
   query('limit').optional().isInt({ min: 0 }).withMessage('Invalid limit value'),
   query('offset').optional().isInt({ min: 0 }).withMessage('Invalid offset value'),
   // Add validation for known filter parameters
-  query('status_id').optional().isInt().withMessage('Invalid status_id filter value'),
+  query('status_id').optional().custom(value => {
+    const intValue = parseInt(value, 10);
+    // Return false if parsing fails or value is out of range
+    if (isNaN(intValue) || intValue < 1 || intValue > 5) {
+      return false;
+    }
+    // Return true if validation passes
+    return true;
+  }).withMessage('Invalid status_id filter value (must be an integer between 1 and 5)'),
   query('project_id').optional().isInt().withMessage('Invalid project_id filter value'),
   query('assigned_user_id').optional().isInt().withMessage('Invalid assigned_user_id filter value'),
   // Add validation for sort and include using custom validators

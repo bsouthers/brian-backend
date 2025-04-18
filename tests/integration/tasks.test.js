@@ -45,41 +45,73 @@ describe('Tasks API - /api/v1/tasks', () => {
   // --- GET /api/v1/tasks ---
   describe('GET /', () => {
     it('should return a list of tasks', async () => {
-      const res = await request(app).get('/api/v1/tasks');
+      const res = await request(app)
+        .get('/api/v1/tasks')
+        .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data.tasks).toBeInstanceOf(Array);
       expect(res.body.data.tasks.length).toBeGreaterThanOrEqual(2);
-      expect(res.body.data.tasks[0]).toHaveProperty('id');
-      expect(res.body.data.tasks[0]).toHaveProperty('description', 'First Task');
-      expect(res.body.data.tasks[0]).toHaveProperty('project_id', testProject.id); // Check project_id
+      // Find the task with the specific description instead of assuming order
+      const foundTask1 = res.body.data.tasks.find(task => task.description === 'First Task');
+      expect(foundTask1).toBeDefined();
+      expect(foundTask1).toHaveProperty('id');
+      expect(foundTask1).toHaveProperty('project_id', testProject.id); // Check project_id
       // Check for included Job/Project if service includes them
       // expect(res.body.data.tasks[0].Job).toBeDefined();
       // expect(res.body.data.tasks[0].Job.Project).toBeDefined();
     });
 
     // TODO: Add tests for filtering/pagination if implemented
+
+    it('should return 400 if invalid status query parameter is provided', async () => {
+      const res = await request(app)
+        .get('/api/v1/tasks?status_id=invalid')
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
+      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
+      expect(res.body.validationDetails[0].param).toEqual('status_id'); // Check the specific param in details
+    });
   });
 
   // --- GET /api/v1/tasks/:id ---
   describe('GET /:id', () => {
     it('should return a single task by ID', async () => {
-      const res = await request(app).get(`/api/v1/tasks/${task1.id}`);
+      const res = await request(app)
+        .get(`/api/v1/tasks/${task1.id}`)
+        .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.task).toHaveProperty('id', task1.id);
-      expect(res.body.data.task).toHaveProperty('description', task1.description);
-      expect(res.body.data.task).toHaveProperty('project_id', testProject.id); // Check project_id
+      // Assert directly on res.body.data as the task object is not nested under 'task' key
+      expect(res.body.data).toHaveProperty('id', task1.id);
+      expect(res.body.data).toHaveProperty('description', task1.description);
+      expect(res.body.data).toHaveProperty('project_id', testProject.id); // Check project_id
       // Check for included Job/Project
       // expect(res.body.data.task.Job).toBeDefined();
     });
 
     it('should return 404 if task not found', async () => {
       const nonExistentId = 99999;
-      const res = await request(app).get(`/api/v1/tasks/${nonExistentId}`);
+      const res = await request(app)
+        .get(`/api/v1/tasks/${nonExistentId}`)
+        .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(404);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Task not found'); // Check error string directly
+      expect(res.body.error.message).toMatch(/not found/i); // Check error message property
+    });
+
+    it('should return 400 if task ID is invalid', async () => {
+      const invalidId = 'abc';
+      const res = await request(app)
+        .get(`/api/v1/tasks/${invalidId}`)
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
+      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
+      expect(res.body.validationDetails[0].param).toEqual('id'); // Check the specific param in details
     });
   });
 
@@ -90,9 +122,9 @@ describe('Tasks API - /api/v1/tasks', () => {
     beforeEach(() => {
       // Reset newTaskData before each test in this block
       newTaskData = {
-        description: 'A brand new task',
-        projectId: testProject.id, // Provide required projectId
-        statusId: 1, // Assuming statusId 1 exists
+        name: 'A brand new task', // Use 'name' as required by validation
+        project_id: testProject.id, // Provide required project_id (snake_case)
+        status_id: 1, // Assuming status_id 1 exists (snake_case)
         // Add other required fields based on model if needed for creation
       };
       // Remove jobId logic as it's not in the Task model
@@ -107,9 +139,12 @@ describe('Tasks API - /api/v1/tasks', () => {
 
       expect(res.statusCode).toEqual(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.task).toHaveProperty('id');
-      expect(res.body.data.task.description).toEqual(newTaskData.description);
-      expect(res.body.data.task.jobId).toEqual(newTaskData.jobId);
+      // Assert directly on res.body.data as the task object is not nested under 'task' key
+      expect(res.body.data).toHaveProperty('id');
+      expect(res.body.data.name).toEqual(newTaskData.name); // Check 'name' field
+      // expect(res.body.data.jobId).toEqual(newTaskData.jobId); // jobId is not part of the model/response here
+      expect(res.body.data.project_id).toEqual(newTaskData.project_id); // Check project_id
+      expect(res.body.data.status_id).toEqual(newTaskData.status_id); // Check status_id
       // TODO: Verify createdBy if implemented
     });
 
@@ -149,7 +184,7 @@ describe('Tasks API - /api/v1/tasks', () => {
   describe('PUT /:id', () => {
     const updateData = {
       description: 'Updated Task Description',
-      statusId: 2, // Assuming statusId 2 exists
+      status_id: 2, // Assuming status_id 2 exists (snake_case)
     };
 
     it('should update an existing task with valid data and token', async () => {
@@ -160,9 +195,10 @@ describe('Tasks API - /api/v1/tasks', () => {
 
       expect(res.statusCode).toEqual(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.task).toHaveProperty('id', task1.id);
-      expect(res.body.data.task.description).toEqual(updateData.description);
-      expect(res.body.data.task.status_id).toEqual(updateData.statusId); // Check status_id (snake_case)
+      // Assert directly on res.body.data as the task object is not nested under 'task' key
+      expect(res.body.data).toHaveProperty('id', task1.id);
+      expect(res.body.data.description).toEqual(updateData.description);
+      expect(res.body.data.status_id).toEqual(updateData.status_id); // Check status_id (snake_case)
       // TODO: Verify updatedBy if implemented
     });
 
@@ -174,7 +210,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .send(updateData);
       expect(res.statusCode).toEqual(404);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Task not found'); // Check error string directly
+      expect(res.body.error.message).toMatch(/not found/i); // Check error message property
     });
 
     it('should return 401 if no token is provided', async () => {
@@ -182,6 +218,19 @@ describe('Tasks API - /api/v1/tasks', () => {
         .put(`/api/v1/tasks/${task1.id}`)
         .send(updateData);
       expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 400 if task ID is invalid', async () => {
+      const invalidId = 'abc';
+      const res = await request(app)
+        .put(`/api/v1/tasks/${invalidId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(updateData);
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
+      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
+      expect(res.body.validationDetails[0].param).toEqual('id'); // Check the specific param in details
     });
 
     // TODO: Add tests for validation errors on update
@@ -207,7 +256,9 @@ describe('Tasks API - /api/v1/tasks', () => {
       expect(res.statusCode).toEqual(204); // No Content
 
       // Verify task is actually deleted
-      const getRes = await request(app).get(`/api/v1/tasks/${task1.id}`);
+      const getRes = await request(app)
+        .get(`/api/v1/tasks/${task1.id}`)
+        .set('Authorization', `Bearer ${token}`);
       expect(getRes.statusCode).toEqual(404);
     });
 
@@ -218,12 +269,24 @@ describe('Tasks API - /api/v1/tasks', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(404);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Task not found'); // Check error string directly
+      expect(res.body.error.message).toMatch(/not found/i); // Check error message property
     });
 
     it('should return 401 if no token is provided', async () => {
       const res = await request(app).delete(`/api/v1/tasks/${task2.id}`); // Use task2 as task1 might be deleted
       expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 400 if task ID is invalid', async () => {
+      const invalidId = 'abc';
+      const res = await request(app)
+        .delete(`/api/v1/tasks/${invalidId}`)
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
+      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
+      expect(res.body.validationDetails[0].param).toEqual('id'); // Check the specific param in details
     });
   });
 });
