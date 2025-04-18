@@ -1,12 +1,10 @@
 // C:\Apps\Brian\tests\globalSetup.js
-const path = require('path');
 const { Umzug, SequelizeStorage } = require('umzug');
 const Sequelize = require('sequelize'); // Need Sequelize constructor
 const bcrypt = require('bcrypt');
 // const db = require('../src/models'); // DO NOT require app models here initially
 
 // Load test config directly
-const fs   = require('fs');
 
 const fs   = require('fs');
 const path = require('path');
