@@ -13,39 +13,15 @@ const cfgPath = fs.existsSync(
   ? '../../config/config.json'
   : '../../config/config.ci.json';
 
-const env    = process.env.NODE_ENV || 'development'; // Default to development if NODE_ENV is not set
-// Load the specific environment config directly from the chosen file
-const config = require(cfgPath)[env];
-const db = {}; // Define db object early
-let useConfig;
-
-if (env === 'test') {
-  // Ensure we're using the test config from config.json
-  if (!config.test) {
-    throw new Error("Test configuration missing in config/config.json");
-  }
-  useConfig = config.test;
-  console.log("Using TEST environment configuration from config.json");
-} else {
-  // Use env vars primarily, fallback to development config if env vars are missing
-  const devConfig = config.development || {}; // Fallback if development config is missing
-
-  useConfig = {
-    database: process.env.DB_NAME || devConfig.database,
-    username: process.env.DB_USER || devConfig.username,
-    password: process.env.DB_PASSWORD || devConfig.password,
-    host: process.env.DB_HOST || devConfig.host,
-    port: process.env.DB_PORT || devConfig.port,
-    dialect: process.env.DB_DIALECT || devConfig.dialect || 'postgres', // Default dialect
-    // Carry over other potential settings like pool, logging, etc.
-    // Prioritize env vars if specific ones exist, otherwise use development config or defaults
-    pool: devConfig.pool || { max: 5, min: 0, acquire: 30000, idle: 10000 },
-    // Adjust logging based on environment variable or development config setting
-    logging: (process.env.DB_LOGGING === 'true' || (env !== 'test' && devConfig.logging === true)) ? console.log : false,
-    // Add any other necessary properties from config.development or env vars
-  };
-  console.log(`Using ${env} environment configuration (prioritizing environment variables)`);
+const env  = process.env.NODE_ENV || 'development';
+const fullConfig = require(cfgPath);          // whole JSON
+if (!fullConfig[env]) {
+  throw new Error(`Missing "${env}" section in ${cfgPath}`);
 }
+const useConfig = fullConfig[env];            // just once
+console.log(`Using ${env.toUpperCase()} environment configuration from ${cfgPath}`);
+const db = {}; // Define db object early
+    // Prioritize env vars if specific ones exist, otherwise use development config or defaults
 
 // Now, initialize Sequelize using the determined 'useConfig'
 let sequelize;
