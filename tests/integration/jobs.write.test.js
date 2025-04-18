@@ -2,7 +2,8 @@
 const request = require('supertest');
 const app = require('../../src/index'); // Corrected path to main app file
 const { sequelize } = require('../../src/models');
-const { setupTestDb, getAuthHeader, createTestUser, createTestProject, generateTestToken } = require('../test-helpers'); // Added generateTestToken
+const { setupTestDb, getAuthHeader, createTestUser, createTestProject } = require('../test-helpers');
+const { generateToken: generateTestToken } = require('../helpers/authTestHelper'); // Import generateToken and alias it
 
 describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
     let server;
