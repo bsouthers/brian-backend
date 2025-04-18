@@ -9,13 +9,11 @@ const bcrypt = require('bcrypt');
 const fs   = require('fs');
 
 // choose real config if it exists, otherwise fall back to the CI file
-const cfgPath = fs.existsSync(
-  path.join(__dirname, '../../config/config.json')
-)
-  ? '../../config/config.json'
-  : '../../config/config.ci.json';
+const realCfg = path.join(__dirname, '..', '..', 'config', 'config.json');
+const ciCfg   = path.join(__dirname, '..', '..', 'config', 'config.ci.json');
 
-const config = require(cfgPath).test;
+const cfgPath = fs.existsSync(realCfg) ? realCfg : ciCfg;
+const config  = require(cfgPath).test;
 
 module.exports = async () => {
     console.log('\nRunning Jest Global Setup: Setting up test database using isolated Umzug...');
