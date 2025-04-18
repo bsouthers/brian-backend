@@ -26,10 +26,12 @@ const authenticateToken = async (req, res, next) => {
     const decoded = jwt.verify(token, secret);
     // Token is valid. Check if we are in test environment.
     if (process.env.NODE_ENV === 'test') {
-      // In test environment, bypass DB lookup if token is valid
+      // In test environment, bypass DB lookup if token is valid.
+      // Assumes token payload (id, email, role) is sufficient for test purposes.
+      // RBAC checks happen in subsequent middleware based on req.user attached here.
       req.user = {
-        id:      decoded.id    ?? 999,
-        email:   decoded.email ?? 'test@example.com',
+        id:      decoded.id    ?? 999, // Use decoded ID or fallback
+        email:   decoded.email ?? 'test@example.com', // Use decoded email or fallback
         role:    decoded.role  ?? 'tester' // Added role as per requirement
       };
       return next(); // Skip DB lookup

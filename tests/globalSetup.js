@@ -18,6 +18,14 @@ const cfgPath = fs.existsSync(
 
 const config = require(cfgPath).test;
 
+// Set the JWT secret for the test environment
+if (!config.jwtSecret) {
+  console.error('!!! Jest Global Setup Error: jwtSecret not found in test config !!!');
+  process.exit(1); // Exit if secret is missing
+}
+process.env.JWT_SECRET = config.jwtSecret;
+console.log('Jest Global Setup: JWT_SECRET set for test environment.');
+
 module.exports = async () => {
     console.log('\nRunning Jest Global Setup: Setting up test database using isolated Umzug...');
 
