@@ -23,6 +23,18 @@ const handleValidationErrors = (req, res, next) => {
   });
 };
 
+// Middleware to handle validation errors specifically for POST /tasks (returns errors array)
+const handlePostValidationErrors = (req, res, next) => {
+  const result = validationResult(req);
+  if (result.isEmpty()) return next();
+
+  const errorsArray = result.array();
+  return res.status(400).json({
+    success: false,
+    errors: errorsArray // Return the full array
+  });
+};
+
 // --- Validation Rules ---
 
 // Custom validator for 'sort' query parameter
@@ -274,7 +286,7 @@ router.get(
 router.post(
     '/',
     createTaskValidation,
-    handleValidationErrors,
+    handlePostValidationErrors, // Use the specific handler for POST
     controller.createTask
 );
 
