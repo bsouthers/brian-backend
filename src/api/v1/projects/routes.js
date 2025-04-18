@@ -21,6 +21,20 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+// New handler specifically for POST validation errors to ensure 'errors' array is returned
+const handlePostProjectValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // Send response directly, including the errors array
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed', // Generic message, specific errors are in the array
+      errors: errors.array()
+    });
+  }
+  next(); // Proceed to controller if validation passes
+};
+
 // Common validation rules
 const paginationValidation = [
   query('limit').optional().isInt({ min: 0 }).withMessage('Invalid limit'), // Match test regex
@@ -348,7 +362,7 @@ router.post(
     '/',
     authenticateToken,           // <-- Added
     createProjectValidation, // Apply validation rules for creation
-    handleValidationErrors,  // Handle any validation errors
+    handlePostProjectValidationErrors, // Use specific handler for POST validation
     controller.createProject // Call the controller function
 );
 
