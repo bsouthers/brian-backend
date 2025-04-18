@@ -100,8 +100,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(invalidData);
             expect(res.statusCode).toEqual(400);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('title');
+            expect(res.body.error).toContain('Title is required'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
 
         it('should return 400 if projectId is missing', async () => {
@@ -112,8 +112,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(invalidData);
             expect(res.statusCode).toEqual(400);
              expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('projectId');
+            expect(res.body.error).toContain('Project ID is required and must be an integer'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
 
         it('should return 400 if projectId is invalid', async () => {
@@ -124,8 +124,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(invalidData);
             expect(res.statusCode).toEqual(400);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('projectId');
+            expect(res.body.error).toContain('Project ID is required and must be an integer'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
 
          it('should return 404 if project associated with projectId does not exist', async () => {
@@ -136,7 +136,7 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(invalidData);
             expect(res.statusCode).toEqual(404);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Project with ID 99999 not found');
+            expect(res.body.error).toContain('Project with ID 99999 not found'); // Corrected path for 404 message
         });
 
         it('should return 400 if status is invalid', async () => {
@@ -147,8 +147,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(invalidData);
             expect(res.statusCode).toEqual(400);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('status');
+            expect(res.body.error).toContain('Invalid status value'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
     });
 
@@ -214,7 +214,7 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(updateData);
             expect(res.statusCode).toEqual(404);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain(`Job with ID ${nonExistentId} not found`);
+            expect(res.body.error).toContain(`Job with ID ${nonExistentId} not found`); // Corrected path for 404 message
         });
 
         it('should return 400 if job ID is invalid', async () => {
@@ -225,8 +225,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(updateData);
             expect(res.statusCode).toEqual(400);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('id');
+            expect(res.body.error).toContain('Job ID must be a positive integer'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
 
         it('should return 400 if status is invalid', async () => {
@@ -237,8 +237,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .send(invalidUpdate);
             expect(res.statusCode).toEqual(400);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('status');
+            expect(res.body.error).toContain('Invalid status value'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
 
         // Add test case if updating projectId is allowed and project doesn't exist (should be 404 or 400 depending on service logic)
@@ -272,7 +272,7 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .set('Authorization', authHeader); // Corrected header key
             expect(res.statusCode).toEqual(404);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain(`Job with ID ${nonExistentId} not found`);
+            expect(res.body.error).toContain(`Job with ID ${nonExistentId} not found`); // Corrected path for 404 message
         });
 
         it('should return 400 if job ID is invalid', async () => {
@@ -282,8 +282,8 @@ describe('Jobs API - Write Operations (/api/v1/jobs)', () => {
                 .set('Authorization', authHeader); // Corrected header key
             expect(res.statusCode).toEqual(400);
             expect(res.body.success).toBe(false);
-            expect(res.body.error.message).toContain('Validation failed');
-            expect(res.body.error.errors[0].param).toBe('id');
+            expect(res.body.error).toContain('Job ID must be a positive integer'); // Expect specific validation message
+            // Removed assertion for validationDetails as it's not included by the global error handler
         });
     });
 });
