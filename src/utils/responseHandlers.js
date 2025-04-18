@@ -64,6 +64,11 @@ const handleError = (res, error, statusCodeParam) => {
     message = 'An unexpected error occurred';
   }
 
+  // Back-compat for tests: keep a top-level string
+  if (typeof error !== 'string') {
+    error = { ...error, message };
+  }
+
   // console.log(`[handleError] Sending response with statusCode: ${statusCode}, message: ${message}`); // Removed log
   const errorPayload = { message };
   if (Array.isArray(error.errors)) {
@@ -85,9 +90,11 @@ const handleError = (res, error, statusCodeParam) => {
 
   res.status(statusCode).json({
     success: false,
-    error: errorPayload,
-    // Optionally include error code or type in development/staging
-    ...(process.env.NODE_ENV !== 'production' && error.name ? { errorType: error.name } : {}),
+    error: message, // Restore flat error string
+    validationDetails: errorPayload.errors, // Keep validation details separate
+    ...(process.env.NODE_ENV !== 'production' && error.name
+        ? { errorType: error.name }
+        : {})
   });
 };
 
