@@ -4,6 +4,8 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: testsecret
     services:
       postgres:
         image: postgres:15
