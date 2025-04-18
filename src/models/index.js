@@ -5,9 +5,17 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development'; // Default to development if NODE_ENV is not set
-// Load the base config object containing all environments
-const config = require(path.join(__dirname, '..', '..', 'config', 'config.json'));
+// Pick the real config if it exists, otherwise fall back to the CI stub
+// Note: fs and path are already required above (lines 3 & 4)
+const cfgPath = fs.existsSync(
+  path.join(__dirname, '../../config/config.json')
+)
+  ? '../../config/config.json'
+  : '../../config/config.ci.json';
+
+const env    = process.env.NODE_ENV || 'development'; // Default to development if NODE_ENV is not set
+// Load the specific environment config directly from the chosen file
+const config = require(cfgPath)[env];
 const db = {}; // Define db object early
 let useConfig;
 
