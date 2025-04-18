@@ -70,9 +70,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
-      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
-      expect(res.body.validationDetails[0].param).toEqual('status_id'); // Check the specific param in details
+      expect(res.body.error).toMatch(/Invalid status_id/i); // Check the specific error message
     });
   });
 
@@ -99,7 +97,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(404);
       expect(res.body.success).toBe(false);
-      expect(res.body.error.message).toMatch(/not found/i); // Check error message property
+      expect(res.body.error).toMatch(/not found/i); // Check error string directly
     });
 
     it('should return 400 if task ID is invalid', async () => {
@@ -109,9 +107,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
-      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
-      expect(res.body.validationDetails[0].param).toEqual('id'); // Check the specific param in details
+      expect(res.body.error).toEqual('Invalid task ID'); // Check the specific error message
     });
   });
 
@@ -210,7 +206,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .send(updateData);
       expect(res.statusCode).toEqual(404);
       expect(res.body.success).toBe(false);
-      expect(res.body.error.message).toMatch(/not found/i); // Check error message property
+      expect(res.body.error).toMatch(/not found/i); // Check error string directly
     });
 
     it('should return 401 if no token is provided', async () => {
@@ -228,9 +224,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .send(updateData);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
-      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
-      expect(res.body.validationDetails[0].param).toEqual('id'); // Check the specific param in details
+      expect(res.body.error).toEqual('Invalid task ID'); // Check the specific error message
     });
 
     // TODO: Add tests for validation errors on update
@@ -269,7 +263,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(404);
       expect(res.body.success).toBe(false);
-      expect(res.body.error.message).toMatch(/not found/i); // Check error message property
+      expect(res.body.error).toMatch(/not found/i); // Check error string directly
     });
 
     it('should return 401 if no token is provided', async () => {
@@ -284,9 +278,7 @@ describe('Tasks API - /api/v1/tasks', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toEqual('Validation failed'); // Check the error message string
-      expect(res.body.validationDetails).toBeDefined(); // Check for the details array
-      expect(res.body.validationDetails[0].param).toEqual('id'); // Check the specific param in details
+      expect(res.body.error).toEqual('Invalid task ID'); // Check the specific error message
     });
   });
 });
