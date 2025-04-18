@@ -6,7 +6,16 @@ const bcrypt = require('bcrypt');
 // const db = require('../src/models'); // DO NOT require app models here initially
 
 // Load test config directly
-const testConfig = require(path.join(__dirname, '..', 'config', 'config.json')).test;
+const fs   = require('fs');
+
+// choose real config if it exists, otherwise fall back to the CI file
+const cfgPath = fs.existsSync(
+  path.join(__dirname, '../../config/config.json')
+)
+  ? '../../config/config.json'
+  : '../../config/config.ci.json';
+
+const config = require(cfgPath).test;
 
 module.exports = async () => {
     console.log('\nRunning Jest Global Setup: Setting up test database using isolated Umzug...');
