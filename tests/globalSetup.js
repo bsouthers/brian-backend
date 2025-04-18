@@ -28,13 +28,13 @@ module.exports = async () => {
         // 1. Create temporary Sequelize instance for migrations
         console.log('Jest Global Setup: Creating temporary Sequelize instance for migrations...');
         migrationSequelize = new Sequelize(
-            testConfig.database,
-            testConfig.username,
-            testConfig.password,
+            config.database,
+            config.username,
+            config.password,
             {
-                host: testConfig.host,
-                port: testConfig.port,
-                dialect: testConfig.dialect,
+                host: config.host,
+                port: config.port,
+                dialect: config.dialect,
                 logging: false, // Keep migration logging minimal for clarity
             }
         );
