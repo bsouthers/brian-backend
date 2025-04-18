@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="157" failures="115" errors="0" time="21.017">
+  <testsuite name="Projects API - Write Operations (Integration)" errors="0" failures="21" skipped="0" timestamp="2025-04-17T20:21:59" time="5.623" tests="27">
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 401 Unauthorized if no token is provided" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 401 Unauthorized if no token is provided" time="0.174">
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 401 Unauthorized if an invalid token is provided" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 401 Unauthorized if an invalid token is provided" time="0.074">
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if required field &quot;name&quot; is missing" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if required field &quot;name&quot; is missing" time="0.107">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:112:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if required field &quot;clickup_space_id&quot; is missing" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if required field &quot;clickup_space_id&quot; is missing" time="0.061">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:123:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if required field &quot;clickup_id&quot; is missing" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if required field &quot;clickup_id&quot; is missing" time="0.067">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:135:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if &quot;status_id&quot; is invalid or non-existent" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 400 Bad Request if &quot;status_id&quot; is invalid or non-existent" time="0.064">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 403
+    at Object.toBe (C:\Apps\Brian\tests\integration\projects.write.test.js:148:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 403 Forbidden if user has &quot;viewer&quot; role" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 403 Forbidden if user has &quot;viewer&quot; role" time="0.045">
+      <failure>Error: expect(received).toMatch(expected)
+
+Expected pattern: /necessary permissions/i
+Received string:  &quot;Insufficient permissions&quot;
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.write.test.js:161:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 201 Created for user with &quot;admin&quot; role" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 201 Created for user with &quot;admin&quot; role" time="0.068">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 201
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:171:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) POST /api/v1/projects should return 201 Created for user with &quot;staff&quot; role" name="Projects API - Write Operations (Integration) POST /api/v1/projects should return 201 Created for user with &quot;staff&quot; role" time="0.071">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 201
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:200:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 401 Unauthorized if no token is provided" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 401 Unauthorized if no token is provided" time="0.113">
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 401 Unauthorized if an invalid token is provided" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 401 Unauthorized if an invalid token is provided" time="0.103">
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 400 Bad Request for an invalid (non-numeric) project ID format" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 400 Bad Request for an invalid (non-numeric) project ID format" time="0.069">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:283:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 404 Not Found for a non-existent project ID" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 404 Not Found for a non-existent project ID" time="0.06">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 404
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:294:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 400 Bad Request if validation fails (e.g., empty name)" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 400 Bad Request if validation fails (e.g., empty name)" time="0.082">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:306:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 400 Bad Request if validation fails (e.g., invalid status_id)" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 400 Bad Request if validation fails (e.g., invalid status_id)" time="0.061">
+      <failure>Error: expect(received).toContain(expected) // indexOf
+
+Expected value: 403
+Received array: [400, 404]
+    at Object.toContain (C:\Apps\Brian\tests\integration\projects.write.test.js:319:26)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 403 Forbidden if user has &quot;viewer&quot; role" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 403 Forbidden if user has &quot;viewer&quot; role" time="0.059">
+      <failure>Error: expect(received).toMatch(expected)
+
+Expected pattern: /necessary permissions/i
+Received string:  &quot;Insufficient permissions&quot;
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.write.test.js:332:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 200 OK for user with &quot;admin&quot; role" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 200 OK for user with &quot;admin&quot; role" time="0.085">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:345:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 200 OK for user with &quot;staff&quot; role" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should return 200 OK for user with &quot;staff&quot; role" time="0.166">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:369:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should ignore attempts to update immutable fields (e.g., id, created_by_user_id)" name="Projects API - Write Operations (Integration) PUT /api/v1/projects/:id should ignore attempts to update immutable fields (e.g., id, created_by_user_id)" time="0.091">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:393:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 401 Unauthorized if no token is provided" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 401 Unauthorized if no token is provided" time="0.069">
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 401 Unauthorized if an invalid token is provided" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 401 Unauthorized if an invalid token is provided" time="0.078">
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 400 Bad Request for an invalid (non-numeric) project ID format" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 400 Bad Request for an invalid (non-numeric) project ID format" time="0.085">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:452:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 404 Not Found for a non-existent project ID" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 404 Not Found for a non-existent project ID" time="0.078">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 404
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:462:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 403 Forbidden if user has &quot;viewer&quot; role" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 403 Forbidden if user has &quot;viewer&quot; role" time="0.055">
+      <failure>Error: expect(received).toMatch(expected)
+
+Expected pattern: /necessary permissions/i
+Received string:  &quot;Insufficient permissions&quot;
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.write.test.js:474:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 403 Forbidden if user has &quot;staff&quot; role" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 403 Forbidden if user has &quot;staff&quot; role" time="0.057">
+      <failure>Error: expect(received).toMatch(expected)
+
+Expected pattern: /necessary permissions/i
+Received string:  &quot;Insufficient permissions&quot;
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.write.test.js:484:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 204 No Content for successful deletion by &quot;admin&quot; user" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 204 No Content for successful deletion by &quot;admin&quot; user" time="0.075">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 204
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.write.test.js:498:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 4xx if attempting to delete a project with dependencies (e.g., tasks)" name="Projects API - Write Operations (Integration) DELETE /api/v1/projects/:id should return 4xx if attempting to delete a project with dependencies (e.g., tasks)" time="0.089">
+      <failure>Error: expect(received).toMatch(expected)
+
+Expected pattern: /cannot delete project.*associated (task|person)/i
+Received string:  &quot;Insufficient permissions&quot;
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.write.test.js:536:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Tasks API - Write Operations (Integration)" errors="0" failures="26" skipped="0" timestamp="2025-04-17T20:22:05" time="3.061" tests="35">
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 401 Unauthorized if no token is provided" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 401 Unauthorized if no token is provided" time="0.036">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 401 Unauthorized if an invalid token is provided" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 401 Unauthorized if an invalid token is provided" time="0.032">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if required field &quot;name&quot; is missing" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if required field &quot;name&quot; is missing" time="0.028">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 201
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:164:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if required field &quot;project_id&quot; is missing" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if required field &quot;project_id&quot; is missing" time="0.067">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:175:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if &quot;project_id&quot; is invalid or non-existent" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if &quot;project_id&quot; is invalid or non-existent" time="0.061">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:187:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if &quot;status_id&quot; is invalid or non-existent" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 400 Bad Request if &quot;status_id&quot; is invalid or non-existent" time="0.023">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:199:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 201 Created and the new task details for valid data" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks should return 201 Created and the new task details for valid data" time="0.041">
+      <failure>Error: expect(received).toBeDefined()
+
+Received: undefined
+    at Object.toBeDefined (C:\Apps\Brian\tests\integration\tasks.write.test.js:214:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 401 Unauthorized if no token is provided" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 401 Unauthorized if no token is provided" time="0.029">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 401 Unauthorized if an invalid token is provided" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 401 Unauthorized if an invalid token is provided" time="0.022">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 400 Bad Request for an invalid (non-numeric) task ID format" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 400 Bad Request for an invalid (non-numeric) task ID format" time="0.03">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:286:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 404 Not Found for a non-existent task ID" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 404 Not Found for a non-existent task ID" time="0.033">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 400 Bad Request if validation fails (e.g., empty name)" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 400 Bad Request if validation fails (e.g., empty name)" time="0.046">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:309:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 400 Bad Request if validation fails (e.g., invalid status_id)" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 400 Bad Request if validation fails (e.g., invalid status_id)" time="0.037">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:321:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 200 OK and the updated task details for valid data" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should return 200 OK and the updated task details for valid data" time="0.041">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 11
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:339:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should ignore attempts to update immutable fields (e.g., id, project_id, created_by_user_id)" name="Tasks API - Write Operations (Integration) PUT /api/v1/tasks/:id should ignore attempts to update immutable fields (e.g., id, project_id, created_by_user_id)" time="0.028">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:368:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 401 Unauthorized if no token is provided" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 401 Unauthorized if no token is provided" time="0.026">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 401 Unauthorized if an invalid token is provided" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 401 Unauthorized if an invalid token is provided" time="0.035">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 400 Bad Request for an invalid (non-numeric) task ID format" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 400 Bad Request for an invalid (non-numeric) task ID format" time="0.027">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:426:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 404 Not Found for a non-existent task ID" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 404 Not Found for a non-existent task ID" time="0.023">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 204 No Content for successful deletion" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id should return 204 No Content for successful deletion" time="0.029">
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 401 Unauthorized if no token is provided" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 401 Unauthorized if no token is provided" time="0.023">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:496:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 400 Bad Request for invalid task ID format" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 400 Bad Request for invalid task ID format" time="0.019">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:506:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 404 Not Found if task ID does not exist" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 404 Not Found if task ID does not exist" time="0.021">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\tasks.write.test.js:516:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 400 Bad Request if user_id is missing in body" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 400 Bad Request if user_id is missing in body" time="0.028">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:525:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 400 Bad Request if user_id is not a number" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 400 Bad Request if user_id is not a number" time="0.017">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:535:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 404 Not Found if user_id does not exist" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 404 Not Found if user_id does not exist" time="0.021">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\tasks.write.test.js:546:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 201 Created and the assignment details on successful assignment" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 201 Created and the assignment details on successful assignment" time="0.022">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 201
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:556:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 409 Conflict if the user is already assigned to the task" name="Tasks API - Write Operations (Integration) POST /api/v1/tasks/:id/assign should return 409 Conflict if the user is already assigned to the task" time="0.029">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 409
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:586:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 401 Unauthorized if no token is provided" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 401 Unauthorized if no token is provided" time="0.026">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:638:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 400 Bad Request for invalid task ID format" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 400 Bad Request for invalid task ID format" time="0.025">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:647:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 400 Bad Request for invalid user ID format" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 400 Bad Request for invalid user ID format" time="0.036">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:656:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 404 Not Found if task ID does not exist" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 404 Not Found if task ID does not exist" time="0.032">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\tasks.write.test.js:666:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 404 Not Found if user ID does not exist" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 404 Not Found if user ID does not exist" time="0.035">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\tasks.write.test.js:676:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 404 Not Found if the assignment does not exist" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 404 Not Found if the assignment does not exist" time="0.058">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\tasks.write.test.js:687:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 204 No Content on successful unassignment" name="Tasks API - Write Operations (Integration) DELETE /api/v1/tasks/:id/assign/:userId should return 204 No Content on successful unassignment" time="0.02">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 204
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.write.test.js:698:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Projects API - Read Operations (Integration)" errors="0" failures="36" skipped="0" timestamp="2025-04-17T20:22:08" time="2.705" tests="39">
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 401 Unauthorized if no token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 401 Unauthorized if no token is provided" time="0.027">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:176:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 401 Unauthorized if an invalid token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 401 Unauthorized if an invalid token is provided" time="0.014">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:185:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 200 OK and a list of projects for an authenticated user" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 200 OK and a list of projects for an authenticated user" time="0.013">
+      <failure>Error: expect(received).toBeInstanceOf(expected)
+
+Expected constructor: Array
+
+Received value has no prototype
+Received value: undefined
+    at Object.toBeInstanceOf (C:\Apps\Brian\tests\integration\projects.read.test.js:201:38)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should handle pagination parameters (limit, offset)" name="Projects API - Read Operations (Integration) GET /api/v1/projects should handle pagination parameters (limit, offset)" time="0.012">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 5
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:216:35)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid pagination parameters (negative limit)" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid pagination parameters (negative limit)" time="0.017">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:227:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid pagination parameters (non-numeric offset)" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid pagination parameters (non-numeric offset)" time="0.011">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:236:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid filter parameters (example)" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid filter parameters (example)" time="0.01">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:246:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid sort parameters (invalid field)" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid sort parameters (invalid field)" time="0.015">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:255:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid sort parameters (invalid order)" name="Projects API - Read Operations (Integration) GET /api/v1/projects should return 400 Bad Request for invalid sort parameters (invalid order)" time="0.013">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:264:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 401 Unauthorized if no token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 401 Unauthorized if no token is provided" time="0.016">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:310:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 401 Unauthorized if an invalid token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 401 Unauthorized if an invalid token is provided" time="0.014">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:318:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 400 Bad Request for an invalid (non-numeric) project ID" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 400 Bad Request for an invalid (non-numeric) project ID" time="0.019">
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 404 Not Found for a non-existent project ID" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 404 Not Found for a non-existent project ID" time="0.011">
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 200 OK and the project details for a valid ID" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should return 200 OK and the project details for a valid ID" time="0.01">
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should handle the &quot;fields&quot; query parameter" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id should handle the &quot;fields&quot; query parameter" time="0.014">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  -  0
++ Received  + 13
+
+  Array [
+    &quot;id&quot;,
+    &quot;name&quot;,
++   &quot;clickup_space_id&quot;,
++   &quot;clickup_id&quot;,
++   &quot;status_id&quot;,
++   &quot;created_by_user_id&quot;,
++   &quot;description&quot;,
++   &quot;notes&quot;,
++   &quot;project_open&quot;,
++   &quot;archived&quot;,
++   &quot;start_date&quot;,
++   &quot;due_date&quot;,
++   &quot;closed_at&quot;,
++   &quot;created_at&quot;,
++   &quot;modified_at&quot;,
+  ]
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:371:42)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 401 Unauthorized if no token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 401 Unauthorized if no token is provided" time="0.008">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:386:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 401 Unauthorized if an invalid token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 401 Unauthorized if an invalid token is provided" time="0.008">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:394:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 400 Bad Request if the project ID is invalid (non-numeric)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 400 Bad Request if the project ID is invalid (non-numeric)" time="0.007">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:403:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 404 Not Found if the project ID does not exist" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 404 Not Found if the project ID does not exist" time="0.012">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.read.test.js:413:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 200 OK and a list of tasks for a valid project ID" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 200 OK and a list of tasks for a valid project ID" time="0.013">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:426:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should handle pagination parameters for tasks" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should handle pagination parameters for tasks" time="0.008">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:447:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 400 Bad Request for invalid pagination parameters (negative offset)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 400 Bad Request for invalid pagination parameters (negative offset)" time="0.011">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:461:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 400 Bad Request for invalid pagination parameters (non-numeric limit)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/tasks should return 400 Bad Request for invalid pagination parameters (non-numeric limit)" time="0.011">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:472:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 401 Unauthorized if no token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 401 Unauthorized if no token is provided" time="0.007">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:487:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 401 Unauthorized if an invalid token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 401 Unauthorized if an invalid token is provided" time="0.017">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:495:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 400 Bad Request if the project ID is invalid (non-numeric)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 400 Bad Request if the project ID is invalid (non-numeric)" time="0.016">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:504:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 404 Not Found if the project ID does not exist" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 404 Not Found if the project ID does not exist" time="0.028">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.read.test.js:514:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 200 OK and a list of jobs for a valid project ID" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 200 OK and a list of jobs for a valid project ID" time="0.013">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:527:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should handle pagination parameters for jobs" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should handle pagination parameters for jobs" time="0.012">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:541:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 400 Bad Request for invalid pagination parameters (negative limit)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 400 Bad Request for invalid pagination parameters (negative limit)" time="0.014">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:554:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 400 Bad Request for invalid pagination parameters (non-numeric offset)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/jobs should return 400 Bad Request for invalid pagination parameters (non-numeric offset)" time="0.021">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:565:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 401 Unauthorized if no token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 401 Unauthorized if no token is provided" time="0.011">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:580:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 401 Unauthorized if an invalid token is provided" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 401 Unauthorized if an invalid token is provided" time="0.009">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:588:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 400 Bad Request if the project ID is invalid (non-numeric)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 400 Bad Request if the project ID is invalid (non-numeric)" time="0.01">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:597:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 404 Not Found if the project ID does not exist" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 404 Not Found if the project ID does not exist" time="0.009">
+      <failure>Error: expect(received).toMatch(expected)
+
+Matcher error: received value must be a string
+
+Received has value: undefined
+    at Object.toMatch (C:\Apps\Brian\tests\integration\projects.read.test.js:607:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 200 OK and a list of assigned people for a valid project ID" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 200 OK and a list of assigned people for a valid project ID" time="0.017">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:635:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should handle pagination parameters for people" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should handle pagination parameters for people" time="0.01">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:667:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 400 Bad Request for invalid pagination parameters (negative offset)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 400 Bad Request for invalid pagination parameters (negative offset)" time="0.015">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:682:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 400 Bad Request for invalid pagination parameters (non-numeric limit)" name="Projects API - Read Operations (Integration) GET /api/v1/projects/:id/people should return 400 Bad Request for invalid pagination parameters (non-numeric limit)" time="0.009">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 404
+    at Object.toEqual (C:\Apps\Brian\tests\integration\projects.read.test.js:695:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Tasks API - Read Operations (Integration)" errors="0" failures="18" skipped="0" timestamp="2025-04-17T20:22:11" time="2.093" tests="22">
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 401 Unauthorized if no token is provided" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 401 Unauthorized if no token is provided" time="0.019">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:120:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 401 Unauthorized if an invalid token is provided" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 401 Unauthorized if an invalid token is provided" time="0.013">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:129:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 200 OK and a list of tasks for an authenticated user" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 200 OK and a list of tasks for an authenticated user" time="0.025">
+      <failure>Error: expect(received).toHaveProperty(path)
+
+Expected path: &quot;total&quot;
+Received path: []
+
+Received value: {&quot;tasks&quot;: [{&quot;Project&quot;: {&quot;archived&quot;: false, &quot;clickup_id&quot;: null, &quot;clickup_space_id&quot;: null, &quot;closed_at&quot;: null, &quot;created_at&quot;: &quot;2025-04-17T20:22:12.600Z&quot;, &quot;created_by_user_id&quot;: 998, &quot;description&quot;: null, &quot;due_date&quot;: null, &quot;id&quot;: 4, &quot;modified_at&quot;: &quot;2025-04-17T20:22:12.600Z&quot;, &quot;name&quot;: &quot;Task Test Project&quot;, &quot;notes&quot;: null, &quot;project_open&quot;: true, &quot;start_date&quot;: null, &quot;status_id&quot;: 1}, &quot;clickup_folder_id&quot;: null, &quot;clickup_id&quot;: null, &quot;clickup_list_id&quot;: null, &quot;clickup_space_id&quot;: null, &quot;clickup_task_id&quot;: null, &quot;closed_at&quot;: null, &quot;created_at&quot;: &quot;2025-04-17T20:22:12.616Z&quot;, &quot;created_by_user_id&quot;: 998, &quot;description&quot;: null, &quot;id&quot;: 34, &quot;modified_at&quot;: &quot;2025-04-17T20:22:12.616Z&quot;, &quot;modified_by_user_id&quot;: null, &quot;name&quot;: &quot;Task Alpha&quot;, &quot;project_id&quot;: 4, &quot;status_id&quot;: 1, &quot;task_open&quot;: true, &quot;time_estimate_seconds&quot;: null}, {&quot;Project&quot;: {&quot;archived&quot;: false, &quot;clickup_id&quot;: null, &quot;clickup_space_id&quot;: null, &quot;closed_at&quot;: null, &quot;created_at&quot;: &quot;2025-04-17T20:22:12.600Z&quot;, &quot;created_by_user_id&quot;: 998, &quot;description&quot;: null, &quot;due_date&quot;: null, &quot;id&quot;: 4, &quot;modified_at&quot;: &quot;2025-04-17T20:22:12.600Z&quot;, &quot;name&quot;: &quot;Task Test Project&quot;, &quot;notes&quot;: null, &quot;project_open&quot;: true, &quot;start_date&quot;: null, &quot;status_id&quot;: 1}, &quot;clickup_folder_id&quot;: null, &quot;clickup_id&quot;: null, &quot;clickup_list_id&quot;: null, &quot;clickup_space_id&quot;: null, &quot;clickup_task_id&quot;: null, &quot;closed_at&quot;: null, &quot;created_at&quot;: &quot;2025-04-17T20:22:12.630Z&quot;, &quot;created_by_user_id&quot;: 998, &quot;description&quot;: null, &quot;id&quot;: 35, &quot;modified_at&quot;: &quot;2025-04-17T20:22:12.630Z&quot;, &quot;modified_by_user_id&quot;: null, &quot;name&quot;: &quot;Task Beta&quot;, &quot;project_id&quot;: 4, &quot;status_id&quot;: 1, &quot;task_open&quot;: true, &quot;time_estimate_seconds&quot;: null}]}
+    at Object.toHaveProperty (C:\Apps\Brian\tests\integration\tasks.read.test.js:144:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should handle pagination parameters (limit, offset)" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should handle pagination parameters (limit, offset)" time="0.015">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 1
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:156:35)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should filter tasks by project_id" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should filter tasks by project_id" time="0.018">
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should filter tasks by status_id" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should filter tasks by status_id" time="0.017">
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should filter tasks by assigned_user_id" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should filter tasks by assigned_user_id" time="0.017">
+      <failure>Error: expect(received).not.toContain(expected) // indexOf
+
+Expected value: not 35
+Received array:     [34, 35]
+    at Object.toContain (C:\Apps\Brian\tests\integration\tasks.read.test.js:202:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should sort tasks by name ascending" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should sort tasks by name ascending" time="0.017">
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should sort tasks by name descending" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should sort tasks by name descending" time="0.02">
+      <failure>Error: expect(received).toBeLessThan(expected)
+
+Expected: &lt; 0
+Received:   1
+    at Object.toBeLessThan (C:\Apps\Brian\tests\integration\tasks.read.test.js:237:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid pagination parameters (negative limit)" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid pagination parameters (negative limit)" time="0.019">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:245:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid filter parameters (non-numeric project_id)" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid filter parameters (non-numeric project_id)" time="0.016">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:254:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid sort parameters (invalid field)" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid sort parameters (invalid field)" time="0.011">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:264:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid sort parameters (invalid order)" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks should return 400 Bad Request for invalid sort parameters (invalid order)" time="0.01">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:273:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 401 Unauthorized if no token is provided" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 401 Unauthorized if no token is provided" time="0.012">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:286:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 401 Unauthorized if an invalid token is provided" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 401 Unauthorized if an invalid token is provided" time="0.02">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 401
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:294:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 400 Bad Request for an invalid (non-numeric) task ID" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 400 Bad Request for an invalid (non-numeric) task ID" time="0.121">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 500
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:303:30)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 404 Not Found for a non-existent task ID" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 404 Not Found for a non-existent task ID" time="0.011">
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 200 OK and the task details for a valid ID" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 200 OK and the task details for a valid ID" time="0.015">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 34
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:330:32)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should include the associated project when requested" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should include the associated project when requested" time="0.015">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 34
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:344:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should include the associated assignees when requested" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should include the associated assignees when requested" time="0.016">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 34
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:359:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should include both project and assignees when requested" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should include both project and assignees when requested" time="0.013">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 34
+Received: undefined
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:376:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 400 Bad Request for invalid include parameter" name="Tasks API - Read Operations (Integration) GET /api/v1/tasks/:id should return 400 Bad Request for invalid include parameter" time="0.013">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 200
+    at Object.toEqual (C:\Apps\Brian\tests\integration\tasks.read.test.js:390:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Jobs API - Write Operations (/api/v1/jobs)" errors="0" failures="14" skipped="0" timestamp="2025-04-17T20:22:13" time="2.415" tests="17">
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should create a new job with valid data and authentication" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should create a new job with valid data and authentication" time="0.055">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 201
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:73:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 401 if not authenticated" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 401 if not authenticated" time="0.019">
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if title is missing" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if title is missing" time="0.027">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:100:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if projectId is missing" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if projectId is missing" time="0.042">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:112:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if projectId is invalid" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if projectId is invalid" time="0.026">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:124:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 404 if project associated with projectId does not exist" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 404 if project associated with projectId does not exist" time="0.032">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 404
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:136:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if status is invalid" name="Jobs API - Write Operations (/api/v1/jobs) POST /api/v1/jobs should return 400 if status is invalid" time="0.03">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:147:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should update an existing job with valid data and authentication" name="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should update an existing job with valid data and authentication" time="0.035">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:168:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should allow partial updates (e.g., only status)" name="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should allow partial updates (e.g., only status)" time="0.04">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 200
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:189:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 401 if not authenticated" name="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 401 if not authenticated" time="0.038">
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 404 if job ID does not exist" name="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 404 if job ID does not exist" time="0.028">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 404
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:214:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 400 if job ID is invalid" name="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 400 if job ID is invalid" time="0.029">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:225:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 400 if status is invalid" name="Jobs API - Write Operations (/api/v1/jobs) PUT /api/v1/jobs/:id should return 400 if status is invalid" time="0.034">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:237:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should delete an existing job with valid authentication" name="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should delete an existing job with valid authentication" time="0.024">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 204
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:254:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should return 401 if not authenticated" name="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should return 401 if not authenticated" time="0.022">
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should return 404 if job ID does not exist" name="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should return 404 if job ID does not exist" time="0.041">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 404
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:272:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should return 400 if job ID is invalid" name="Jobs API - Write Operations (/api/v1/jobs) DELETE /api/v1/jobs/:id should return 400 if job ID is invalid" time="0.03">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 400
+Received: 403
+    at Object.toEqual (C:\Apps\Brian\tests\integration\jobs.write.test.js:282:36)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Tasks API - /api/v1/tasks" errors="0" failures="0" skipped="2" timestamp="2025-04-17T20:22:16" time="2.228" tests="14">
+    <testcase classname="Tasks API - /api/v1/tasks GET / should return a list of tasks" name="Tasks API - /api/v1/tasks GET / should return a list of tasks" time="0.066">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks GET /:id should return a single task by ID" name="Tasks API - /api/v1/tasks GET /:id should return a single task by ID" time="0.094">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks GET /:id should return 404 if task not found" name="Tasks API - /api/v1/tasks GET /:id should return 404 if task not found" time="0.05">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks POST / should create a new task with valid data and token" name="Tasks API - /api/v1/tasks POST / should create a new task with valid data and token" time="0.064">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks POST / should return 401 if no token is provided" name="Tasks API - /api/v1/tasks POST / should return 401 if no token is provided" time="0.039">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks POST / should return 401 if token is invalid" name="Tasks API - /api/v1/tasks POST / should return 401 if token is invalid" time="0.042">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks POST / should return 400 if required fields are missing" name="Tasks API - /api/v1/tasks POST / should return 400 if required fields are missing" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks PUT /:id should update an existing task with valid data and token" name="Tasks API - /api/v1/tasks PUT /:id should update an existing task with valid data and token" time="0.056">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks PUT /:id should return 404 if task to update is not found" name="Tasks API - /api/v1/tasks PUT /:id should return 404 if task to update is not found" time="0.043">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks PUT /:id should return 401 if no token is provided" name="Tasks API - /api/v1/tasks PUT /:id should return 401 if no token is provided" time="0.039">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks PUT /:id should return 400 if update data is invalid" name="Tasks API - /api/v1/tasks PUT /:id should return 400 if update data is invalid" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks DELETE /:id should delete an existing task with a valid token" name="Tasks API - /api/v1/tasks DELETE /:id should delete an existing task with a valid token" time="0.071">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks DELETE /:id should return 404 if task to delete is not found" name="Tasks API - /api/v1/tasks DELETE /:id should return 404 if task to delete is not found" time="0.042">
+    </testcase>
+    <testcase classname="Tasks API - /api/v1/tasks DELETE /:id should return 401 if no token is provided" name="Tasks API - /api/v1/tasks DELETE /:id should return 401 if no token is provided" time="0.03">
+    </testcase>
+  </testsuite>
+  <testsuite name="GET /api/v1/jobs" errors="0" failures="0" skipped="0" timestamp="2025-04-17T20:22:18" time="2.072" tests="3">
+    <testcase classname="GET /api/v1/jobs should return 401 Unauthorized if no token is provided" name="GET /api/v1/jobs should return 401 Unauthorized if no token is provided" time="0.021">
+    </testcase>
+    <testcase classname="GET /api/v1/jobs should return a list of jobs" name="GET /api/v1/jobs should return a list of jobs" time="0.028">
+    </testcase>
+    <testcase classname="GET /api/v1/jobs should return a list of jobs including associated project when include=project is specified" name="GET /api/v1/jobs should return a list of jobs including associated project when include=project is specified" time="0.032">
+    </testcase>
+  </testsuite>
+</testsuites>

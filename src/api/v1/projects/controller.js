@@ -92,10 +92,11 @@ const createProject = async (req, res) => {
   // 1. Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Format errors for consistent response
-    const formattedErrors = errors.array().map(err => ({ field: err.param, message: err.msg }));
     // Use 400 for validation errors
-    return handleError(res, { message: 'Validation failed', errors: formattedErrors }, 400);
+    const error = new Error('Validation failed');
+    error.statusCode = 400;
+    error.errors = errors.array();
+    return handleError(res, error);
   }
 
   // 2. Proceed if validation passes
@@ -138,11 +139,10 @@ const updateProject = async (req, res) => {
   // 1. Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const formattedErrors = errors.array().map(err => ({
-      field: err.param || 'general', // Use 'general' if param is not specific (e.g., body validation)
-      message: err.msg,
-    }));
-    return handleError(res, { message: 'Validation failed', errors: formattedErrors }, 400);
+    const error = new Error('Validation failed');
+    error.statusCode = 400;
+    error.errors = errors.array();
+    return handleError(res, error);
   }
 
   // 2. Proceed if validation passes
@@ -174,11 +174,10 @@ const deleteProject = async (req, res) => {
   // 1. Check for validation errors (primarily for the ID format)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const formattedErrors = errors.array().map(err => ({
-      field: err.param || 'id', // Assume error is related to 'id' if not specified
-      message: err.msg,
-    }));
-    return handleError(res, { message: 'Validation failed', errors: formattedErrors }, 400);
+    const error = new Error('Validation failed');
+    error.statusCode = 400;
+    error.errors = errors.array();
+    return handleError(res, error);
   }
 
   // 2. Proceed if validation passes
