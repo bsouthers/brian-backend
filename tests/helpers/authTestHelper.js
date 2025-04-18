@@ -1,7 +1,15 @@
 // tests/helpers/authTestHelper.js
 const bcrypt = require('bcrypt');
 const db = require('../../src/models');          // <- your Sequelize models
-const { generateTestToken } = require('../test-helpers');
+const jwt = require('jsonwebtoken'); // Add jwt require
+
+// Helper function to generate a valid JWT for testing
+const generateTestToken = (userId) => {
+  // Use a real user ID from your test setup or seed data if necessary
+  const payload = { id: userId, email: `user${userId}@test.com` };
+  // JWT secret is now accessed via process.env.JWT_SECRET set in setup.js
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
 
 /**
  * Inserts a throw-away user into the test DB and returns both the row and a JWT.
@@ -18,7 +26,7 @@ async function createTestUser() {
 
   return {
     user,
-    token: generateTestToken(user.employee_id)   // employee_id is PK in your schema
+    token: generateTestToken(user.employee_id)   // Use the local generateTestToken
   };
 }
 
