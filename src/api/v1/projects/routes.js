@@ -7,14 +7,16 @@ const { handleError } = require('../../../utils/responseHandlers'); // Import CO
 
 const router = express.Router();
 
-// Middleware to handle validation errors
+// Middleware to handle validation errors using the new helper
+const firstErrMsg = require('../../../middleware/validationMessage'); // Path adjusted from src/api/v1/projects/
+
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const validationError = new Error('Validation failed');
-    validationError.statusCode = 400;
-    validationError.errors = errors.array();
-    return handleError(res, validationError);
+    const err = new Error(firstErrMsg(errors.array())); // ← field‑specific message
+    err.statusCode = 400;
+    err.errors = errors.array();                         // keep full details
+    return next(err); // Pass to the central error handler
   }
   next();
 };

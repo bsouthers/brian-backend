@@ -6,28 +6,22 @@ const { handleError } = require('../../../utils/responseHandlers');
 
 const r = express.Router();
 
-// validate helper
-const validate = (req,res,next)=>{
+// Use the new validation helper
+const firstErrMsg = require('../../../middleware/validationMessage'); // Path adjusted from src/api/v1/jobs/
+
+const handleValidationErrors = (req, res, next) => { // Renamed to handleValidationErrors for consistency
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Map the validation errors to match what the tests expect
-    // The tests expect 'param' but express-validator uses 'path'
-    const mappedErrors = errors.array().map(err => ({
-      ...err,
-      param: err.path // Add param property that points to the path
-    }));
-    
-    // Return the mapped validation errors
-    return res.status(400).json({
-      success: false,
-      error: {
-        message: 'Validation failed',
-        errors: mappedErrors
-      }
-    });
+    const err = new Error(firstErrMsg(errors.array())); // ← field‑specific message
+    err.statusCode = 400;
+    err.errors = errors.array();                         // keep full details
+    return next(err); // Pass to the central error handler
   }
   next();
 };
+
+// Alias for routes below that used 'validate'
+const validate = handleValidationErrors;
 
 // shared rules
 const idParam = [ param('id').isInt({gt:0}).withMessage('Job ID must be a positive integer') ];
