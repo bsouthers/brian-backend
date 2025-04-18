@@ -123,7 +123,11 @@ describe('Projects API - Write Operations (Integration)', () => {
         .send(invalidData);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toMatch(/name.*required/i); // Adjust regex based on actual validation message
+      expect(res.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ msg: expect.stringMatching(/name.*required/i) })
+        ])
+      );
     });
 
     it('should return 400 Bad Request if required field "clickup_space_id" is missing', async () => {
@@ -134,8 +138,11 @@ describe('Projects API - Write Operations (Integration)', () => {
           .send(invalidData);
         expect(res.statusCode).toEqual(400);
         expect(res.body.success).toBe(false);
-        // Updated regex to match the exact validation message
-        expect(res.body.error).toMatch(/ClickUp Space ID is required/i);
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ msg: expect.stringMatching(/ClickUp Space ID.*required/i) }) // Match 'clickup_space_id' required
+          ])
+        );
       });
 
       it('should return 400 Bad Request if required field "clickup_id" is missing', async () => {
@@ -146,8 +153,11 @@ describe('Projects API - Write Operations (Integration)', () => {
           .send(invalidData);
         expect(res.statusCode).toEqual(400);
         expect(res.body.success).toBe(false);
-        // Updated regex to match the exact validation message
-        expect(res.body.error).toMatch(/ClickUp ID is required/i);
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ msg: expect.stringMatching(/ClickUp ID.*required/i) }) // Match 'clickup_id' required
+          ])
+        );
       });
 
       it('should return 400 Bad Request if "status_id" is invalid or non-existent', async () => {
