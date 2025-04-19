@@ -9,17 +9,30 @@ const router = express.Router();
 
 // Middleware to handle validation errors (similar to projects)
 const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const firstError = errors.array()[0];
-    const errorMessage = firstError.msg;
-    const validationError = new Error(errorMessage);
-    validationError.statusCode = 400;
-    // Instead of handling the error here, pass it to the next middleware
-    // which will eventually trigger the global error handler
-    return next(validationError);
-  }
-  next();
+  const result = validationResult(req);
+  if (result.isEmpty()) return next();
+
+  // Extract the message from the first validation error
+  const errorsArray = result.array();
+  const firstErrorMsg = errorsArray.length > 0 ? errorsArray[0].msg : 'Validation failed'; // Default fallback
+
+  return res.status(400).json({
+    success: false,
+    // Use the specific message from the first error
+    error: firstErrorMsg
+  });
+};
+
+// Middleware to handle validation errors specifically for POST /tasks (returns errors array)
+const handlePostValidationErrors = (req, res, next) => {
+  const result = validationResult(req);
+  if (result.isEmpty()) return next();
+
+  const errorsArray = result.array();
+  return res.status(400).json({
+    success: false,
+    errors: errorsArray // Return the full array
+  });
 };
 
 // --- Validation Rules ---
@@ -66,7 +79,15 @@ const listTasksValidation = [
   query('limit').optional().isInt({ min: 0 }).withMessage('Invalid limit value'),
   query('offset').optional().isInt({ min: 0 }).withMessage('Invalid offset value'),
   // Add validation for known filter parameters
-  query('status_id').optional().isInt().withMessage('Invalid status_id filter value'),
+  query('status_id').optional().custom(value => {
+    const intValue = parseInt(value, 10);
+    // Return false if parsing fails or value is out of range
+    if (isNaN(intValue) || intValue < 1 || intValue > 5) {
+      return false;
+    }
+    // Return true if validation passes
+    return true;
+  }).withMessage('Invalid status_id filter value (must be an integer between 1 and 5)'),
   query('project_id').optional().isInt().withMessage('Invalid project_id filter value'),
   query('assigned_user_id').optional().isInt().withMessage('Invalid assigned_user_id filter value'),
   // Add validation for sort and include using custom validators
@@ -265,7 +286,7 @@ router.get(
 router.post(
     '/',
     createTaskValidation,
-    handleValidationErrors,
+    handlePostValidationErrors, // Use the specific handler for POST
     controller.createTask
 );
 

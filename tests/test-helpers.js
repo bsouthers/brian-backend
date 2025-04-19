@@ -3,13 +3,7 @@ const jwt = require('jsonwebtoken');
 
 // JWT secret is now accessed via process.env.JWT_SECRET set in setup.js
 
-// Helper function to generate a valid JWT for testing
-const generateTestToken = (userId) => {
-  // Use a real user ID from your test setup or seed data if necessary
-  const payload = { id: userId, email: `user${userId}@test.com` }; 
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-};
-
+// generateTestToken moved to authTestHelper.js to avoid circular dependency
 const db = require('../src/models'); // Need access to models
 
 async function createTestProject({ ownerId = null } = {}) {
@@ -72,8 +66,47 @@ async function createTestJob(jobData = {}) {
 }
 
 
+// Helper function to create a test task
+async function createTestTask(taskData = {}) {
+  // Ensure required fields have defaults or are provided
+  const defaults = {
+    name: `Test Task ${Date.now()}`, // Use 'name' based on POST test
+    description: 'Default task description', // Add description
+    status_id: 1, // Default status ID
+    // project_id is expected to be provided in taskData (snake_case)
+  };
+
+  // Merge provided data with defaults, ensuring snake_case for DB fields
+  const dataToCreate = {
+      name: taskData.name || defaults.name,
+      description: taskData.description || defaults.description,
+      status_id: taskData.statusId || taskData.status_id || defaults.status_id, // Allow camelCase or snake_case input
+      project_id: taskData.projectId || taskData.project_id // Allow camelCase or snake_case input
+  };
+
+
+  if (!dataToCreate.project_id) {
+    console.error('createTestTask called without project_id.');
+    throw new Error('createTestTask requires a project_id');
+  }
+  if (!dataToCreate.status_id) {
+      console.error('createTestTask called without status_id.');
+      throw new Error('createTestTask requires a status_id');
+  }
+
+  try {
+    // Use db.Task model to create the task
+    const task = await db.Task.create(dataToCreate);
+    console.log(`Test task ${task.id} created with name "${task.name}" for project ${task.project_id}`);
+    return task;
+  } catch (error) {
+    console.error('Error creating test task:', error);
+    throw error;
+  }
+}
+
 module.exports = {
-  generateTestToken,
   createTestProject,
-  createTestJob // Export the new helper
+  createTestJob, // Export the new helper
+  createTestTask // Export the task helper
 };

@@ -163,7 +163,11 @@ describe('Tasks API - Write Operations (Integration)', () => {
         .send(invalidData);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toMatch(/name.*required/i);
+      expect(res.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ msg: expect.stringMatching(/name.*required/i) })
+        ])
+      );
     });
 
     it('should return 400 Bad Request if required field "project_id" is missing', async () => {
@@ -174,7 +178,11 @@ describe('Tasks API - Write Operations (Integration)', () => {
           .send(invalidData);
         expect(res.statusCode).toEqual(400);
         expect(res.body.success).toBe(false);
-        expect(res.body.error).toBe("Project ID is required"); // Match exact string
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ msg: expect.stringMatching(/Project ID.*required/i) }) // Match 'project_id' required
+          ])
+        );
       });
 
     it('should return 400 Bad Request if "project_id" is invalid or non-existent', async () => {
