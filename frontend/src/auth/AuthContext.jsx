@@ -7,6 +7,7 @@ const AuthContext = createContext(null);
 // Create the provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  // TODO: Switch to http-only cookies for JWT storage and transmission in the next sprint for improved security.
   const [token, setToken] = useState(() => localStorage.getItem('jwt')); // Initialize token from localStorage
   const [isLoading, setIsLoading] = useState(true); // Start in loading state
 
