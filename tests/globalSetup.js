@@ -1,12 +1,30 @@
 // C:\Apps\Brian\tests\globalSetup.js
-const path = require('path');
 const { Umzug, SequelizeStorage } = require('umzug');
 const Sequelize = require('sequelize'); // Need Sequelize constructor
 const bcrypt = require('bcrypt');
 // const db = require('../src/models'); // DO NOT require app models here initially
 
 // Load test config directly
-const testConfig = require(path.join(__dirname, '..', 'config', 'config.json')).test;
+
+const fs   = require('fs');
+const path = require('path');
+
+// choose real config if it exists, otherwise fall back to the CI file
+const cfgPath = fs.existsSync(
+  path.resolve(__dirname, '../config/config.json')
+)
+  ? path.resolve(__dirname, '../config/config.json')
+  : path.resolve(__dirname, '../config/config.ci.json');
+
+const config = require(cfgPath).test;
+
+// Set the JWT secret for the test environment
+if (!config.jwtSecret) {
+  console.error('!!! Jest Global Setup Error: jwtSecret not found in test config !!!');
+  process.exit(1); // Exit if secret is missing
+}
+process.env.JWT_SECRET = config.jwtSecret;
+console.log('Jest Global Setup: JWT_SECRET set for test environment.');
 
 module.exports = async () => {
     console.log('\nRunning Jest Global Setup: Setting up test database using isolated Umzug...');
@@ -18,13 +36,13 @@ module.exports = async () => {
         // 1. Create temporary Sequelize instance for migrations
         console.log('Jest Global Setup: Creating temporary Sequelize instance for migrations...');
         migrationSequelize = new Sequelize(
-            testConfig.database,
-            testConfig.username,
-            testConfig.password,
+            config.database,
+            config.username,
+            config.password,
             {
-                host: testConfig.host,
-                port: testConfig.port,
-                dialect: testConfig.dialect,
+                host: config.host,
+                port: config.port,
+                dialect: config.dialect,
                 logging: false, // Keep migration logging minimal for clarity
             }
         );

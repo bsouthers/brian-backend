@@ -130,7 +130,7 @@ module.exports = (sequelize) => {
 
     // Associations based on FKs *in other tables* pointing to this one:
     Project.hasMany(models.Task, { foreignKey: 'project_id', as: 'Tasks' }); // Assumes Task model has project_id
-    Project.hasMany(models.Job, { foreignKey: 'projectId', as: 'jobs' }); // Added association to Job model
+    Project.hasMany(models.Job, { foreignKey: 'projectId', as: 'Jobs' }); // Added association to Job model
     Project.belongsToMany(models.Person, {
         through: models.ProjectAssignment,
         foreignKey: 'project_id',

@@ -302,6 +302,7 @@ describe('Tasks API - Read Operations (Integration)', () => {
         .set('Authorization', `Bearer ${testToken}`);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
+      // Check the specific error message in the top-level error field
       expect(res.body.error).toMatch(/Invalid task ID/i);
     });
 
