@@ -39,33 +39,21 @@ const PersonDefinition = {
     unique: true,
     field: 'clickup_id'
   },
-  is_active: { // Renamed from 'active' and added based on migration
+  active: { // Database column seems to be 'active', not 'is_active' as previously thought
     type: DataTypes.BOOLEAN,
     defaultValue: true,
-    field: 'is_active'
+    field: 'active' // Map model attribute 'active' to DB column 'active'
   },
   // Removed created_by_user_id
   // Removed modified_by_user_id
   // Removed team
-  created_at: { // Added based on migration
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-    field: 'created_at'
-  },
-  modified_at: { // Added based on migration
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-    field: 'modified_at'
-  }
 };
 
 const PersonOptions = {
   tableName: 'people',
-  timestamps: true, // Enable timestamps as columns exist
-  createdAt: 'created_at',
-  updatedAt: 'modified_at',
+  timestamps: false, // Disable timestamps as columns (created_at, modified_at) don't exist in the DB table
+  // createdAt: 'created_at', // No longer needed
+  // updatedAt: 'modified_at', // No longer needed
   underscored: true,
   hooks: {
     beforeSave: async (person, options) => {

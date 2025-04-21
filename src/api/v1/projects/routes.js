@@ -7,22 +7,32 @@ const { handleError } = require('../../../utils/responseHandlers'); // Import CO
 
 const router = express.Router();
 
-// Middleware to handle validation errors
+// Middleware to handle validation errors using the new helper
+const firstErrMsg = require('../../../middleware/validationMessage'); // Path adjusted from src/api/v1/projects/
+
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Use the message from the first validation error for the response
-    const firstError = errors.array()[0];
-    const errorMessage = firstError.msg; // Use only the message from the validator
-
-    // Create an error object compatible with handleError
-    const validationError = new Error(errorMessage); // Use the validator's message
-    validationError.statusCode = 400;
-    // Add context for debugging if needed, but don't include in the main error message sent to client unless necessary
-    // validationError.details = { field: firstError.param, value: firstError.value };
-    return handleError(res, validationError); // Use handleError
+    const err = new Error(firstErrMsg(errors.array())); // ← field‑specific message
+    err.statusCode = 400;
+    err.errors = errors.array();                         // keep full details
+    return next(err); // Pass to the central error handler
   }
   next();
+};
+
+// New handler specifically for POST validation errors to ensure 'errors' array is returned
+const handlePostProjectValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // Send response directly, including the errors array
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed', // Generic message, specific errors are in the array
+      errors: errors.array()
+    });
+  }
+  next(); // Proceed to controller if validation passes
 };
 
 // Common validation rules
@@ -352,7 +362,7 @@ router.post(
     '/',
     authenticateToken,           // <-- Added
     createProjectValidation, // Apply validation rules for creation
-    handleValidationErrors,  // Handle any validation errors
+    handlePostProjectValidationErrors, // Use specific handler for POST validation
     controller.createProject // Call the controller function
 );
 

@@ -21,6 +21,7 @@ const login = async (req, res) => {
 
     // Send the token and user details back
     // Consider security implications of what user details are sent.
+    // TODO: Switch to http-only cookies for JWT storage and transmission in the next sprint for improved security.
     res.json({ token: result.token, user: result.user });
 
   } catch (error) {

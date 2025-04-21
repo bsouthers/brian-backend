@@ -62,9 +62,19 @@ describe('Projects API - Write Operations (Integration)', () => {
     // Clean up projects created during tests in this file
     // Hard-reset the projects table after each test in this suite
     try {
-      console.log('afterEach: Truncating Project table...');
-      await Project.destroy({ truncate: true, cascade: true, restartIdentity: true });
-      console.log('afterEach: Project table truncated.');
+      console.log(`afterEach: Destroying ${createdProjectIds.length} created projects tracked in this file...`);
+      if (createdProjectIds.length > 0) {
+        // Ensure IDs are valid numbers before attempting deletion
+        const validIds = createdProjectIds.filter(id => typeof id === 'number' && !isNaN(id));
+        if (validIds.length > 0) {
+            await Project.destroy({ where: { id: validIds } });
+            console.log('afterEach: Tracked projects destroyed.');
+        } else {
+            console.log('afterEach: No valid tracked project IDs to destroy.');
+        }
+      } else {
+        console.log('afterEach: No projects tracked for destruction.');
+      }
     } catch (error) {
       console.error("afterEach: Error truncating projects table:", error);
     }
@@ -123,7 +133,11 @@ describe('Projects API - Write Operations (Integration)', () => {
         .send(invalidData);
       expect(res.statusCode).toEqual(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toMatch(/name.*required/i); // Adjust regex based on actual validation message
+      expect(res.body.errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ msg: expect.stringMatching(/name.*required/i) })
+        ])
+      );
     });
 
     it('should return 400 Bad Request if required field "clickup_space_id" is missing', async () => {
@@ -134,8 +148,11 @@ describe('Projects API - Write Operations (Integration)', () => {
           .send(invalidData);
         expect(res.statusCode).toEqual(400);
         expect(res.body.success).toBe(false);
-        // Updated regex to match the exact validation message
-        expect(res.body.error).toMatch(/ClickUp Space ID is required/i);
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ msg: expect.stringMatching(/ClickUp Space ID.*required/i) }) // Match 'clickup_space_id' required
+          ])
+        );
       });
 
       it('should return 400 Bad Request if required field "clickup_id" is missing', async () => {
@@ -146,8 +163,11 @@ describe('Projects API - Write Operations (Integration)', () => {
           .send(invalidData);
         expect(res.statusCode).toEqual(400);
         expect(res.body.success).toBe(false);
-        // Updated regex to match the exact validation message
-        expect(res.body.error).toMatch(/ClickUp ID is required/i);
+        expect(res.body.errors).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ msg: expect.stringMatching(/ClickUp ID.*required/i) }) // Match 'clickup_id' required
+          ])
+        );
       });
 
       it('should return 400 Bad Request if "status_id" is invalid or non-existent', async () => {

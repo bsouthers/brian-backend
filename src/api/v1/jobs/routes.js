@@ -1,66 +1,62 @@
-// C:\Apps\Brian\src\api\v1\jobs\routes.js
 const express = require('express');
-const jobController = require('./controller');
-const authenticate = require('../../../middleware/auth'); // Import the middleware function directly
+const { param, body, validationResult } = require('express-validator');
+const ctrl = require('./controller');
+const auth = require('../../../middleware/auth');
+const { handleError } = require('../../../utils/responseHandlers');
 
-const router = express.Router();
+const r = express.Router();
 
-// Define job routes
+// Use the new validation helper
+const firstErrMsg = require('../../../middleware/validationMessage'); // Path adjusted from src/api/v1/jobs/
 
-/**
- * @openapi
- * /jobs:
- *   get:
- *     tags:
- *       - Jobs
- *     summary: Retrieve a list of jobs
- *     description: Returns a list of jobs, with optional filtering and inclusion of related data (e.g., project).
- *     parameters:
- *       - in: query
- *         name: include
- *         schema:
- *           type: string
- *         description: Comma-separated list of associations to include (e.g., project)
- *       - in: query
- *         name: fields
- *         schema:
- *           type: string
- *         description: Comma-separated list of fields to return for the Job model
- *       # Add other potential filter parameters here (e.g., status, projectId)
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *         description: Filter by job status
- *       - in: query
- *         name: projectId
- *         schema:
- *           type: integer
- *         description: Filter by associated project ID
- *     responses:
- *       200:
- *         description: A list of jobs.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Job' # Assuming Job schema defined
- *       400:
- *         description: Invalid query parameters
- *       401:
- *         description: Unauthorized
- *     security:
- *       - bearerAuth: []
- */
-// GET /api/v1/jobs - List all jobs (protected)
-router.get('/', authenticate, jobController.listJobs);
+const handleValidationErrors = (req, res, next) => { // Renamed to handleValidationErrors for consistency
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const err = new Error(firstErrMsg(errors.array())); // ← field‑specific message
+    err.statusCode = 400;
+    err.errors = errors.array();                         // keep full details
+    return next(err); // Pass to the central error handler
+  }
+  next();
+};
 
-// Add other job routes (POST, GET /:id, PUT /:id, DELETE /:id) here if needed in the future
+// Alias for routes below that used 'validate'
+const validate = handleValidationErrors;
 
-module.exports = router;
+// shared rules
+const idParam = [ param('id').isInt({gt:0}).withMessage('Job ID must be a positive integer') ];
+const statusRule = body('status')
+      .optional()
+      .isIn(['pending','in-progress','completed','archived'])
+      .withMessage('Invalid status value');
+
+r.use(auth);   // all job endpoints are protected
+
+/* LIST (already passes) */
+r.get('/', ctrl.listJobs);
+
+/* CREATE */
+r.post('/',
+  body('title').notEmpty().withMessage('Title is required'),
+  body('projectId').isInt({gt:0}).withMessage('Project ID is required and must be an integer'),
+  statusRule,
+  validate,
+  ctrl.createJob
+);
+
+/* READ single  */
+r.get('/:id', idParam, validate, ctrl.getJobById);
+
+/* UPDATE */
+r.put('/:id',
+  idParam,
+  body('title').optional().notEmpty(),
+  statusRule,
+  validate,
+  ctrl.updateJob
+);
+
+/* DELETE */
+r.delete('/:id', idParam, validate, ctrl.deleteJob);
+
+module.exports = r;

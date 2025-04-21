@@ -10,3 +10,4 @@ coverage/
 # Secrets
 .env*
 config/config.json
+!config/config.ci.json
