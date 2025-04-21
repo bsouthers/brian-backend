@@ -1,0 +1,66 @@
+name: Backend + Frontend CI
+
+on: [push, pull_request]
+
+jobs:
+  backend-unit:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - run: npm ci
+
+      - run: npm test -- --coverage
+
+      - uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  e2e:
+    needs: backend-unit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install root deps
+        run: npm ci
+
+      - name: Start backend
+        run: |
+          npm run dev &
+          echo $! > backend.pid
+
+      - name: Run Cypress e2e
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run test:e2e
+
+      - name: Stop backend
+        if: always()
+        run: kill $(cat backend.pid)
