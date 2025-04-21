@@ -52,7 +52,7 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // app.use('/api/v1', apiRoutes);
 
 // Mount Authentication Routes
-app.use('/auth', authRoutes); // Use '/auth' as the base path for authentication endpoints
+app.use('/api/v1/auth', authRoutes); // Use '/api/v1/auth' as the base path for authentication endpoints
 
 // Mount Project Routes
 app.use('/api/v1/projects', projectRoutes); // Use '/api/v1/projects' as the base path
