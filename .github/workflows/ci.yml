@@ -65,10 +65,12 @@ jobs:
 
       - name: Install frontend deps and run Cypress e2e
         run: |
+          echo "Changing to frontend directory..."
+          cd frontend
           echo "Installing frontend dependencies..."
-          npm ci --workspace=frontend
+          npm ci
           echo "Running Cypress tests..."
-          npm run test:e2e --workspace=frontend
+          npm run test:e2e
 
       - name: Stop backend
         if: always()
