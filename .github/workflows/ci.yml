@@ -138,12 +138,12 @@ jobs:
           # seed the admin user (dev@example.com / password123), specifying config path
           npx sequelize-cli db:seed:all --env development --config config/config.ci.json
 
-      - name: Start backend and wait
+      - name: Start backend (no‑watch)
         run: |
-          echo "Starting backend server..."
-          npm run dev &
+          echo "Starting backend without nodemon…"
+          NODE_ENV=development node src/index.js &   # ← plain node, NOT nodemon
           echo $! > backend.pid
-          echo "Backend PID: $(cat backend.pid)." # Removed the 'Waiting 10s...' part
+          sleep 5    # brief pause before polling
 
       - name: Wait for backend to answer (max 60 s)
         run: |
