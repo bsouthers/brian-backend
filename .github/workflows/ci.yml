@@ -40,6 +40,39 @@ jobs:
           fail_ci_if_error: false # Allow this step to fail without breaking the build
           token: ${{ env.CODECOV_TOKEN }} # Use env var for token
 
+      - name: Dump failing log to PR comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jobId   = process.env.GITHUB_JOB   // name of this job
+            const runId   = process.env.GITHUB_RUN_ID
+            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              run_id: runId
+            })
+            const thisJob = jobs.jobs.find(j => j.name === jobId)
+            if (!thisJob) return
+            const { data: log } = await github.rest.actions.downloadJobLogsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              job_id: thisJob.id
+            })
+            const tail = log.split('\n').slice(-200).join('\n')
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: [
+                `❌ **${jobId} failed**`,
+                '<details><summary>Last 200 lines</summary>',
+                '```text', tail, '```',
+                '</details>'
+              ].join('\n')
+            })
+
   e2e:
     needs: backend-unit
     runs-on: ubuntu-latest
@@ -85,3 +118,36 @@ jobs:
       - name: Stop backend
         if: always()
         run: kill $(cat backend.pid)
+
+      - name: Dump failing log to PR comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jobId   = process.env.GITHUB_JOB   // name of this job
+            const runId   = process.env.GITHUB_RUN_ID
+            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              run_id: runId
+            })
+            const thisJob = jobs.jobs.find(j => j.name === jobId)
+            if (!thisJob) return
+            const { data: log } = await github.rest.actions.downloadJobLogsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              job_id: thisJob.id
+            })
+            const tail = log.split('\n').slice(-200).join('\n')
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: [
+                `❌ **${jobId} failed**`,
+                '<details><summary>Last 200 lines</summary>',
+                '```text', tail, '```',
+                '</details>'
+              ].join('\n')
+            })
