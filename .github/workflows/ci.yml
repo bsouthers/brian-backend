@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   backend-unit:
     runs-on: ubuntu-latest
+    env: # Add env block for Codecov token
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     services:
       postgres:
         image: postgres:15
@@ -32,16 +34,17 @@ jobs:
       - run: npm test -- --coverage
 
       - name: Upload coverage to Codecov # Added name for clarity
-        if: ${{ secrets.CODECOV_TOKEN != '' }}
+        if: ${{ env.CODECOV_TOKEN != '' }} # Use env var in condition
         uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ env.CODECOV_TOKEN }} # Use env var for token
 
   e2e:
     needs: backend-unit
     runs-on: ubuntu-latest
-
+    env: # Add env block for Codecov token
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - uses: actions/checkout@v3
 
