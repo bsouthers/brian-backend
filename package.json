@@ -6,7 +6,7 @@
     "test": "cross-env NODE_ENV=test jest --runInBand --verbose",
     "test:db": "node scripts/test-db-connection.js",
     "test:db:direct": "node scripts/direct-db-test.js",
-    "db:init": "bash scripts/create-ci-db.sh",
+    "db:init": "node scripts/create-ci-db.js",
     "start": "node src/index.js",
     "dev": "npm run db:init && nodemon src/index.js"
   },
