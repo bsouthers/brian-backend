@@ -8,6 +8,6 @@ coverage/
 .DS_Store
 
 # Secrets
-.env*
+.env
 config/config.json
 !config/config.ci.json

@@ -31,3 +31,7 @@ npx sequelize-cli db:migrate --env production
 
 Just run `npm run dev` – if the `ci` PostgreSQL user/database don’t exist
 locally the script will create them automatically (matching what CI uses).
+### Local .env
+
+Create a `.env` file (not committed) by copying `.env.example`, then adjust
+`PGUSER` / `PGPASSWORD` if your local Postgres creds differ.
