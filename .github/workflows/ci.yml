@@ -1,11 +1,15 @@
-name: Backend CI
+name: Backend + Frontend CI
+
 on: [push, pull_request]
 
 jobs:
-  test:
+  backend-unit:
     runs-on: ubuntu-latest
-    env:
-      JWT_SECRET: testsecret
+    permissions: # Add permissions for PR commenting
+      issues: write
+      pull-requests: write
+    env: # Add env block for Codecov token
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     services:
       postgres:
         image: postgres:15
@@ -20,14 +24,179 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+
       - run: npm ci
+
       - run: npm test -- --coverage
-      - uses: codecov/codecov-action@v3
+
+      - name: Upload coverage to Codecov # Added name for clarity
+        if: ${{ env.CODECOV_TOKEN != '' }} # Use env var in condition
+        uses: codecov/codecov-action@v3
         with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false # Allow this step to fail without breaking the build
+          token: ${{ env.CODECOV_TOKEN }} # Use env var for token
+
+      - name: Dump failing log to PR comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jobId   = process.env.GITHUB_JOB   // name of this job
+            const runId   = process.env.GITHUB_RUN_ID
+            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              run_id: runId
+            })
+            const thisJob = jobs.jobs.find(j => j.name === jobId)
+            if (!thisJob) return
+            const { data: log } = await github.rest.actions.downloadJobLogsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              job_id: thisJob.id
+            })
+            const tail = log.split('\n').slice(-200).join('\n')
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: [
+                `❌ **${jobId} failed**`,
+                '<details><summary>Last 200 lines</summary>',
+                '```text', tail, '```',
+                '</details>'
+              ].join('\n')
+            })
+
+      - name: CI success comment
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `✅ **${process.env.GITHUB_JOB} passed** on commit \`${process.env.GITHUB_SHA.slice(0,7)}\`.`
+            })
+
+  e2e:
+    needs: backend-unit
+    runs-on: ubuntu-latest
+    permissions: # Add permissions for PR commenting
+      issues: write
+      pull-requests: write
+    env: # Add env block for Codecov token
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }} # Add JWT secret for the application
+      jwtSecret: ${{ secrets.JWT_SECRET }}   # NEW (lower-case key)
+      JWT_EXPIRES_IN: '1h' # Add JWT expiration time
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install root deps
+        run: npm ci
+
+      - name: List config directory contents # Debug step
+        run: ls -la config
+
+      - name: Migrate & seed dev DB
+        working-directory: .
+        run: |
+          echo "Running migrations..."
+          # run migrations against the postgres service, specifying config path
+          npx sequelize-cli db:migrate --env development --config config/config.ci.json
+          echo "Seeding database..."
+          # seed the admin user (dev@example.com / password123), specifying config path
+          npx sequelize-cli db:seed:all --env development --config config/config.ci.json
+
+      - name: Start backend (no‑watch)
+        run: |
+          echo "Starting backend without nodemon…"
+          NODE_ENV=development node src/index.js &   # ← plain node, NOT nodemon
+          echo $! > backend.pid
+          sleep 5    # brief pause before polling
+
+      - name: Wait for backend to answer (max 60 s)
+        run: |
+          for i in {1..30}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Content-Type: application/json" \
+              -d '{"email":"dev@example.com","password":"password123"}' \
+              http://localhost:3000/api/v1/auth/login || true)
+            echo "Attempt $i => $code"
+            if [[ "$code" == "200" || "$code" == "401" ]]; then
+              echo "Backend is up."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Backend never became ready"; exit 1
+
+      - name: Install frontend deps and run Cypress e2e
+        run: |
+          echo "Changing to frontend directory..."
+          cd frontend
+          echo "Installing frontend dependencies..."
+          npm ci
+          echo "Running Cypress tests..."
+          npm run test:e2e
+
+      - name: Stop backend
+        if: always()
+        run: kill $(cat backend.pid)
+
+      - name: Dump failing log to PR comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jobId   = process.env.GITHUB_JOB   // name of this job
+            const runId   = process.env.GITHUB_RUN_ID
+            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              run_id: runId
+            })
+
+      - name: CI success comment
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `✅ **${process.env.GITHUB_JOB} passed** on commit \`${process.env.GITHUB_SHA.slice(0,7)}\`.`
+            })

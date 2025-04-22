@@ -1,6 +1,10 @@
 const { Person } = require('../models'); // Assuming models/index.js exports models
 const jwt = require('jsonwebtoken');
-const { jwtSecret, jwtExpiresIn } = require('../config/environment'); // Assuming JWT config is here
+// const { jwtSecret, jwtExpiresIn } = require('../config/environment'); // Assuming JWT config is here // Commented out old line
+const env          = require('../config/environment');
+// Accept either JWT_SECRET / JWT_EXPIRES_IN (upper-case) or the original lower-case variants
+const jwtSecret    = env.jwtSecret    || env.JWT_SECRET;
+const jwtExpiresIn = env.jwtExpiresIn || env.JWT_EXPIRES_IN || '1h';
 
 /**
  * Attempts to log in a user.
