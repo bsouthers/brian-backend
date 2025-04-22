@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   backend-unit:
     runs-on: ubuntu-latest
+    permissions: # Add permissions for PR commenting
+      issues: write
+      pull-requests: write
     env: # Add env block for Codecov token
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     services:
@@ -89,6 +92,9 @@ jobs:
   e2e:
     needs: backend-unit
     runs-on: ubuntu-latest
+    permissions: # Add permissions for PR commenting
+      issues: write
+      pull-requests: write
     env: # Add env block for Codecov token
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
