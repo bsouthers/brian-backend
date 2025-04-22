@@ -97,6 +97,7 @@ jobs:
       pull-requests: write
     env: # Add env block for Codecov token
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }} # Add JWT secret for the application
     services:
       postgres:
         image: postgres:15
