@@ -111,11 +111,11 @@ jobs:
         working-directory: .
         run: |
           echo "Running migrations..."
-          # run migrations against the postgres service
-          npx sequelize-cli db:migrate --env development
+          # run migrations against the postgres service, specifying config path
+          npx sequelize-cli db:migrate --env development --config config/config.json
           echo "Seeding database..."
-          # seed the admin user (dev@example.com / password123)
-          npx sequelize-cli db:seed:all --env development
+          # seed the admin user (dev@example.com / password123), specifying config path
+          npx sequelize-cli db:seed:all --env development --config config/config.json
 
       - name: Start backend and wait
         run: |
