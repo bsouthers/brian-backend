@@ -55,6 +55,16 @@ jobs:
       - name: Install root deps
         run: npm ci
 
+      - name: Migrate & seed dev DB
+        working-directory: .
+        run: |
+          echo "Running migrations..."
+          # run migrations against the postgres service
+          npx sequelize-cli db:migrate --env development
+          echo "Seeding database..."
+          # seed the admin user (dev@example.com / password123)
+          npx sequelize-cli db:seed:all --env development
+
       - name: Start backend and wait
         run: |
           echo "Starting backend server..."
