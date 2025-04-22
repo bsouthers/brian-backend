@@ -55,16 +55,20 @@ jobs:
       - name: Install root deps
         run: npm ci
 
-      - name: Start backend
+      - name: Start backend and wait
         run: |
+          echo "Starting backend server..."
           npm run dev &
           echo $! > backend.pid
+          echo "Backend PID: $(cat backend.pid). Waiting 10s for server to start..."
+          sleep 10
 
-      - name: Run Cypress e2e
-        working-directory: frontend
+      - name: Install frontend deps and run Cypress e2e
         run: |
-          npm ci
-          npm run test:e2e
+          echo "Installing frontend dependencies..."
+          npm ci --workspace=frontend
+          echo "Running Cypress tests..."
+          npm run test:e2e --workspace=frontend
 
       - name: Stop backend
         if: always()
