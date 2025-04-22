@@ -1,11 +1,17 @@
 const { Client } = require('pg');
 
+// Ensure we always pass a string for the bootstrap connection password
+const BOOT_USER     = process.env.PGUSER     || 'postgres';
+const BOOT_PASSWORD = (process.env.PGPASSWORD !== undefined)
+                      ? process.env.PGPASSWORD
+                      : '';                       // ← empty string is OK
+
 // Database connection details - use environment variables or defaults
 const dbConfig = {
-  user: process.env.PGUSER || 'postgres', // Default user to connect for setup
+  user: BOOT_USER,
   host: process.env.PGHOST || '127.0.0.1',
   database: process.env.PGDATABASE || 'postgres', // Connect to default db for setup
-  password: process.env.PGPASSWORD || undefined, // Use password if provided
+  password: BOOT_PASSWORD,
   port: process.env.PGPORT || 5432,
 };
 
