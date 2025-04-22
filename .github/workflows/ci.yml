@@ -107,6 +107,9 @@ jobs:
       - name: Install root deps
         run: npm ci
 
+      - name: List config directory contents # Debug step
+        run: ls -la config
+
       - name: Migrate & seed dev DB
         working-directory: .
         run: |
