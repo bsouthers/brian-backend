@@ -200,22 +200,3 @@ jobs:
               issue_number: context.payload.pull_request.number,
               body: `✅ **${process.env.GITHUB_JOB} passed** on commit \`${process.env.GITHUB_SHA.slice(0,7)}\`.`
             })
-            const thisJob = jobs.jobs.find(j => j.name === jobId)
-            if (!thisJob) return
-            const { data: log } = await github.rest.actions.downloadJobLogsForWorkflowRun({
-              owner: context.repo.owner,
-              repo:  context.repo.repo,
-              job_id: thisJob.id
-            })
-            const tail = log.split('\n').slice(-200).join('\n')
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo:  context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: [
-                `❌ **${jobId} failed**`,
-                '<details><summary>Last 200 lines</summary>',
-                '```text', tail, '```',
-                '</details>'
-              ].join('\n')
-            })
