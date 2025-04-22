@@ -98,6 +98,7 @@ jobs:
     env: # Add env block for Codecov token
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }} # Add JWT secret for the application
+      jwtSecret: ${{ secrets.JWT_SECRET }}   # NEW (lower-case key)
       JWT_EXPIRES_IN: '1h' # Add JWT expiration time
     services:
       postgres:
