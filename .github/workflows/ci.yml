@@ -37,7 +37,7 @@ jobs:
         if: ${{ env.CODECOV_TOKEN != '' }} # Use env var in condition
         uses: codecov/codecov-action@v3
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: false # Allow this step to fail without breaking the build
           token: ${{ env.CODECOV_TOKEN }} # Use env var for token
 
   e2e:
