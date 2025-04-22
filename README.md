@@ -27,3 +27,7 @@ npx sequelize-cli db:migrate --env production
 ```
 
 **Note:** Ensure you have the necessary permissions and the correct environment configuration before running migrations.
+### First‑run setup
+
+Just run `npm run dev` – if the `ci` PostgreSQL user/database don’t exist
+locally the script will create them automatically (matching what CI uses).
