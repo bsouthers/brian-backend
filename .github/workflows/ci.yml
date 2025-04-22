@@ -141,8 +141,23 @@ jobs:
           echo "Starting backend server..."
           npm run dev &
           echo $! > backend.pid
-          echo "Backend PID: $(cat backend.pid). Waiting 10s for server to start..."
-          sleep 10
+          echo "Backend PID: $(cat backend.pid)." # Removed the 'Waiting 10s...' part
+
+      - name: Wait for backend to answer (max 60 s)
+        run: |
+          for i in {1..30}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Content-Type: application/json" \
+              -d '{"email":"dev@example.com","password":"password123"}' \
+              http://localhost:3000/api/v1/auth/login || true)
+            echo "Attempt $i => $code"
+            if [[ "$code" == "200" || "$code" == "401" ]]; then
+              echo "Backend is up."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Backend never became ready"; exit 1
 
       - name: Install frontend deps and run Cypress e2e
         run: |
