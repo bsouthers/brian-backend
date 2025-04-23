@@ -3,9 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
+    await queryInterface.bulkDelete('projects', null, {});
     await queryInterface.bulkInsert('projects', [
       {
-        id: 1, // Renamed from project_id
         name: 'Website Redesign',
         status_id: 1, // Active
         description: 'Complete overhaul of the corporate website design and user experience.',
@@ -15,7 +15,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 2, // Renamed from project_id
         name: 'API Integration',
         status_id: 1, // Active
         description: 'Integrate third-party CRM API with our internal systems.',
@@ -25,7 +24,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 3, // Renamed from project_id
         name: 'Mobile App Launch',
         status_id: 1, // Active
         description: 'Develop and launch the new iOS and Android mobile application.',
@@ -35,7 +33,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 4, // Renamed from project_id
         name: 'Data Warehouse Migration',
         status_id: 1, // Active
         description: 'Migrate existing data warehouse to a new cloud platform.',
@@ -45,7 +42,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 5, // Renamed from project_id
         name: 'Customer Portal Development',
         status_id: 1, // Active
         description: 'Build a new self-service portal for customers.',
@@ -55,7 +51,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 6, // Renamed from project_id
         name: 'Marketing Campaign Automation',
         status_id: 1, // Active
         description: 'Implement a new system for automating marketing campaigns.',
@@ -65,7 +60,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 7, // Renamed from project_id
         name: 'Internal Wiki Setup',
         status_id: 1, // Active
         description: 'Set up and populate an internal knowledge base wiki.',
@@ -75,7 +69,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 8, // Renamed from project_id
         name: 'Security Audit',
         status_id: 1, // Active
         description: 'Conduct a comprehensive security audit of all systems.',
@@ -85,7 +78,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 9, // Renamed from project_id
         name: 'Legacy System Decommission',
         status_id: 2, // Archived
         description: 'Plan and execute the decommissioning of the old accounting system.',
@@ -95,7 +87,6 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        id: 10, // Renamed from project_id
         name: 'Office Network Upgrade',
         status_id: 2, // Archived
         description: 'Upgrade the internal office network infrastructure (completed last year).',
