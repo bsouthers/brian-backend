@@ -35,3 +35,7 @@ locally the script will create them automatically (matching what CI uses).
 
 Create a `.env` file (not committed) by copying `.env.example`, then adjust
 `PGUSER` / `PGPASSWORD` if your local Postgres creds differ.
+
+After you copy `.env.example` → `.env`, make sure `JWT_SECRET`
+(and optionally `JWT_EXPIRES_IN`) are defined; otherwise
+the backend will return a 500 during login.
