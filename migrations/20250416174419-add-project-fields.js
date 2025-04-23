@@ -68,6 +68,13 @@ module.exports = {
       defaultValue: false,
     });
 
+    // Add is_active column
+    await safeAddColumn('projects', 'is_active', {
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: true,
+    });
+
     // Add start_date column
     await safeAddColumn('projects', 'start_date', {
       type: Sequelize.DATE,
@@ -95,6 +102,7 @@ module.exports = {
     // await queryInterface.removeColumn('projects', 'notes');
     // await queryInterface.removeColumn('projects', 'project_open');
     // await queryInterface.removeColumn('projects', 'archived');
+    // await queryInterface.removeColumn('projects', 'is_active');
     // await queryInterface.removeColumn('projects', 'start_date');
     // await queryInterface.removeColumn('projects', 'due_date');
     // await queryInterface.removeColumn('projects', 'closed_at');

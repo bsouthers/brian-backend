@@ -53,7 +53,7 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       },
-      modified_at: {
+      updated_at: { // Renamed from modified_at
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
